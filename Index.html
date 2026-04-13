@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>United Pharmacy · Suncare Analytics Q1 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ━━━ UNITED PHARMACY DESIGN SYSTEM ━━━
+   Logo: Teal #00a896 · Orange #f07800 · Sky #00b4d8 */
+:root{
+  --bg:#ecf0f7;--surf:#fff;--surf2:#f5f7fc;--surf3:#eaeff8;
+  --bord:#dce3f0;--bord2:#c4cfE4;
+  --t1:#0b1628;--t2:#3d5070;--t3:#7e93ad;--t4:#b3c0d0;
+  --teal:#00a896;--teal-d:#007a6d;--teal-l:rgba(0,168,150,.12);
+  --orange:#f07800;--orange-d:#bf5f00;--orange-l:rgba(240,120,0,.12);
+  --sky:#00b4d8;--sky-d:#0090ad;--sky-l:rgba(0,180,216,.12);
+  --green:#10b981;--green-l:rgba(16,185,129,.13);
+  --red:#e53935;--red-l:rgba(229,57,53,.13);
+  --amber:#f59e0b;--amber-l:rgba(245,158,11,.13);
+  --purple:#7c3aed;--purple-l:rgba(124,58,237,.12);
+  --sbw:256px;--toph:58px;
+  --r:10px;--rl:14px;--rxl:18px;
+  --sh:0 1px 3px rgba(0,0,0,.05),0 4px 20px rgba(0,0,0,.06);
+  --sh-l:0 8px 32px rgba(0,0,0,.11);
+  --tr:.17s cubic-bezier(.4,0,.2,1);
+  --f:'Inter',system-ui,sans-serif;--m:'JetBrains Mono',monospace;
+}
+[data-theme="dark"]{
+  --bg:#1a2744;--surf:#213156;--surf2:#263a65;--surf3:#2c4070;
+  --bord:#344d7a;--bord2:#3d5a8e;
+  --t1:#ddeaf8;--t2:#8da8cc;--t3:#5b7aaa;--t4:#3d5a8e;
+  --teal-l:rgba(0,168,150,.18);--orange-l:rgba(240,120,0,.18);
+  --sky-l:rgba(0,180,216,.18);--green-l:rgba(16,185,129,.18);
+  --red-l:rgba(229,57,53,.18);--amber-l:rgba(245,158,11,.18);
+  --sh:0 1px 3px rgba(0,0,0,.25),0 4px 20px rgba(0,0,0,.35);
+  --sh-l:0 8px 32px rgba(0,0,0,.5);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;-webkit-font-smoothing:antialiased}
+body{font-family:var(--f);background:var(--bg);color:var(--t1);display:flex;min-height:100vh;transition:background var(--tr),color var(--tr)}
+button{cursor:pointer;border:none;background:none;font-family:var(--f);color:inherit}
+input,select{font-family:var(--f)}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bord2);border-radius:9px}
+
+/* LOADER */
+#ldr{position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;z-index:999;transition:opacity .4s}
+#ldr.out{opacity:0;pointer-events:none}
+.ldr-wrap{text-align:center}
+.ldr-img{width:60px;height:60px;object-fit:contain;background:#fff;border-radius:14px;padding:4px;box-shadow:var(--sh-l);display:block;margin:0 auto 14px}
+.ldr-bar{width:200px;height:3px;background:var(--bord);border-radius:9px;overflow:hidden;margin:0 auto}
+.ldr-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--orange),var(--sky));animation:lda 1.7s ease forwards}
+@keyframes lda{from{width:0}to{width:100%}}
+.ldr-txt{font-size:.72rem;color:var(--t3);margin-top:8px}
+
+/* SIDEBAR */
+.sb{width:var(--sbw);min-height:100vh;background:var(--surf);border-right:1px solid var(--bord);
+  display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:200;
+  transition:transform var(--tr),background var(--tr);overflow-y:auto;overflow-x:hidden}
+.sb-head{padding:18px 16px 14px;border-bottom:1px solid var(--bord);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.sb-logo{width:40px;height:40px;object-fit:contain;background:#fff;border-radius:10px;border:1px solid var(--bord);padding:3px;flex-shrink:0}
+.sb-name{font-size:.84rem;font-weight:800;letter-spacing:-.3px;
+  background:linear-gradient(120deg,var(--teal),var(--orange));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2}
+.sb-sub{font-size:.62rem;color:var(--t3);margin-top:2px}
+.sb-nav{padding:10px 8px;flex:1}
+.sb-g{font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t4);padding:10px 8px 3px;margin-top:2px}
+.ni{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;font-size:.78rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all var(--tr);margin-bottom:1px;position:relative}
+.ni:hover{background:var(--surf2);color:var(--t1)}
+.ni.on{background:linear-gradient(90deg,var(--teal-l),var(--sky-l));color:var(--teal);font-weight:700}
+.ni.on::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;background:linear-gradient(180deg,var(--teal),var(--sky));border-radius:0 3px 3px 0}
+.ni svg{width:14px;height:14px;flex-shrink:0;opacity:.6}.ni.on svg{opacity:1}
+.nb{margin-left:auto;background:var(--red);color:#fff;border-radius:9px;padding:1px 6px;font-size:.6rem;font-weight:700}
+.sb-foot{padding:12px 14px 14px;border-top:1px solid var(--bord);flex-shrink:0}
+.th-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.th-lbl{font-size:.72rem;color:var(--t3)}
+.sw{width:38px;height:20px;background:var(--surf3);border-radius:99px;border:1px solid var(--bord2);cursor:pointer;position:relative;transition:background var(--tr)}
+.sw.on{background:linear-gradient(90deg,var(--teal),var(--sky))}
+.sw-k{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform var(--tr)}
+.sw.on .sw-k{transform:translateX(18px)}
+.cr{font-size:.63rem;color:var(--t4);line-height:1.7}
+.cr .ht{color:#f43f5e;animation:hb 1.4s ease infinite;display:inline-block}
+@keyframes hb{0%,100%{transform:scale(1)}40%{transform:scale(1.3)}70%{transform:scale(1.1)}}
+.cr strong{color:var(--orange)}
+
+/* MAIN */
+.main{margin-left:var(--sbw);flex:1;display:flex;flex-direction:column;min-height:100vh}
+
+/* TOPBAR */
+.top{height:var(--toph);background:var(--surf);border-bottom:1px solid var(--bord);
+  display:flex;align-items:center;padding:0 22px;gap:10px;
+  position:sticky;top:0;z-index:100;transition:background var(--tr)}
+.top-logo{height:28px;width:28px;object-fit:contain;background:#fff;border-radius:6px;border:1px solid var(--bord);padding:2px;flex-shrink:0}
+.top-ttl{font-size:.9rem;font-weight:800;flex:1;letter-spacing:-.2px}
+.top-ttl em{color:var(--t3);font-style:normal;font-weight:400;font-size:.82rem}
+.top-strip{display:flex;gap:16px;padding:0 16px;border-left:1px solid var(--bord);border-right:1px solid var(--bord)}
+.ts{text-align:center}
+.ts-v{font-size:.8rem;font-weight:800;font-family:var(--m);color:var(--teal)}
+.ts-l{font-size:.57rem;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-top:1px}
+.live{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pls 2s ease infinite;flex-shrink:0}
+@keyframes pls{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,.5)}50%{box-shadow:0 0 0 5px rgba(16,185,129,0)}}
+.tbts{display:flex;gap:5px}
+.tbt{display:flex;align-items:center;gap:4px;padding:5px 12px;border-radius:7px;font-size:.73rem;font-weight:600;border:1px solid var(--bord);background:var(--surf2);color:var(--t2);transition:all var(--tr)}
+.tbt:hover{background:var(--surf3);border-color:var(--bord2)}
+.tbt.p{background:linear-gradient(120deg,var(--teal),var(--sky));color:#fff;border:none}
+.tbt.p:hover{opacity:.88}
+#mob{display:none;width:32px;height:32px;border-radius:7px;border:1px solid var(--bord);background:var(--surf2);align-items:center;justify-content:center;font-size:1rem;cursor:pointer;flex-shrink:0}
+
+/* PAGE */
+.pg{padding:18px 22px;flex:1}
+
+/* SECTION HEAD */
+.sh{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.sh-t{font-size:.86rem;font-weight:800;letter-spacing:-.2px}
+.sh-tag{font-size:.59rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:4px;background:var(--teal-l);color:var(--teal)}
+.sh-line{flex:1;height:1px;background:var(--bord);min-width:20px}
+.btns{display:flex;gap:4px;flex-wrap:wrap}
+.pb{padding:4px 9px;border-radius:6px;font-size:.7rem;font-weight:600;border:1px solid var(--bord);background:var(--surf2);color:var(--t2);cursor:pointer;transition:all var(--tr)}
+.pb:hover{background:var(--surf3)}
+.pb.on{background:linear-gradient(90deg,var(--teal-l),var(--sky-l));color:var(--teal);border-color:rgba(0,168,150,.3)}
+
+/* FILTER BAR */
+.fb{background:var(--surf);border:1px solid var(--bord);border-radius:var(--rl);padding:10px 16px;
+  display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px;box-shadow:var(--sh)}
+.fl{font-size:.67rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
+.fsl{background:var(--surf2);border:1px solid var(--bord);border-radius:6px;padding:5px 22px 5px 9px;font-size:.76rem;color:var(--t1);
+  appearance:none;cursor:pointer;transition:all var(--tr);min-width:110px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5'%3E%3Cpath d='M0 0l4.5 5L9 0z' fill='%237e93ad'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 8px center}
+.fsl:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 2px rgba(0,168,150,.12)}
+.fsp{width:1px;height:18px;background:var(--bord);margin:0 2px}
+.fa{margin-left:auto;display:flex;gap:5px;align-items:center}
+.ftags{display:flex;gap:5px;flex-wrap:wrap}
+.ftag{display:flex;align-items:center;gap:3px;background:var(--teal-l);border:1px solid rgba(0,168,150,.3);color:var(--teal);border-radius:99px;padding:2px 8px;font-size:.67rem;font-weight:600}
+.ftag-x{cursor:pointer;opacity:.5;margin-left:1px}.ftag-x:hover{opacity:1}
+.fab{padding:5px 12px;border-radius:6px;font-size:.72rem;font-weight:600;cursor:pointer;transition:all var(--tr);border:1px solid var(--bord)}
+.fab-a{background:linear-gradient(90deg,var(--teal),var(--sky));color:#fff;border:none}.fab-a:hover{opacity:.9}
+.fab-r{background:var(--surf2);color:var(--t2)}.fab-r:hover{background:var(--red-l);color:var(--red);border-color:var(--red)}
+
+/* STAT STRIP */
+.strip{background:linear-gradient(90deg,var(--teal),var(--sky) 50%,var(--orange));border-radius:var(--rl);padding:1.5px;margin-bottom:16px;box-shadow:var(--sh)}
+.strip-in{display:flex;background:var(--surf);border-radius:calc(var(--rl) - 1.5px);overflow:hidden}
+.sc{flex:1;padding:11px 14px;text-align:center;border-right:1px solid var(--bord)}
+.sc:last-child{border-right:none}
+.sc-v{font-size:.95rem;font-weight:800;font-family:var(--m);
+  background:linear-gradient(120deg,var(--teal),var(--sky));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sc-l{font-size:.59rem;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;margin-top:1px}
+
+/* KPI CARDS */
+.kg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kc{background:var(--surf);border:1px solid var(--bord);border-radius:var(--rl);padding:15px 17px;
+  box-shadow:var(--sh);cursor:pointer;position:relative;overflow:hidden;
+  transition:transform var(--tr),box-shadow var(--tr),border-color var(--tr);
+  animation:fu .35s ease both}
+.kc:hover{transform:translateY(-2px);box-shadow:var(--sh-l)}
+.kc.sel{border-color:var(--kc);box-shadow:0 0 0 2px var(--kcg),var(--sh-l)}
+.kc-b{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--kc),transparent)}
+.kc-t{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.kc-l{font-size:.66rem;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;line-height:1.35;max-width:100px}
+.kc-i{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-size:.85rem;flex-shrink:0}
+.kc-v{font-size:1.5rem;font-weight:800;font-family:var(--m);letter-spacing:-.5px;margin-bottom:6px;line-height:1}
+.kc-f{display:flex;align-items:center;gap:6px}
+.kch{display:flex;align-items:center;gap:2px;font-size:.67rem;font-weight:700;border-radius:4px;padding:2px 6px}
+.up{color:var(--green);background:var(--green-l)}
+.dn{color:var(--red);background:var(--red-l)}
+.kc-s{font-size:.63rem;color:var(--t3);flex:1}
+.ksp{height:24px;flex-shrink:0;width:60px}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* COMP CALLOUT */
+.cc{background:linear-gradient(120deg,var(--teal-l),var(--sky-l));
+  border:1px solid rgba(0,168,150,.22);border-radius:var(--rl);padding:14px 18px;
+  margin-bottom:14px;display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;box-shadow:var(--sh)}
+.cc-ic{font-size:1.5rem;flex-shrink:0;margin-top:2px}
+.cc-main{flex:1;min-width:200px}
+.cc-t{font-size:.84rem;font-weight:800;color:var(--teal);margin-bottom:3px}
+.cc-d{font-size:.73rem;color:var(--t2);line-height:1.55}
+.cc-nums{display:flex;gap:20px;flex-wrap:wrap;margin-top:2px}
+.cc-n{}
+.cc-nv{font-size:1.15rem;font-weight:800;font-family:var(--m);color:var(--teal)}
+.cc-nl{font-size:.6rem;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-top:1px}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.g6535{display:grid;grid-template-columns:1.7fr 1fr;gap:14px;margin-bottom:14px}
+
+/* CARD */
+.card{background:var(--surf);border:1px solid var(--bord);border-radius:var(--rl);padding:16px;box-shadow:var(--sh);transition:background var(--tr)}
+.ch{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;gap:8px}
+.ct{font-size:.82rem;font-weight:700;margin-bottom:2px}
+.cs{font-size:.67rem;color:var(--t3)}
+.cw{position:relative;width:100%}
+
+/* MARGIN COMPARE BARS */
+.mcg{display:flex;flex-direction:column;gap:9px;padding:2px 0}
+.mcr{display:flex;align-items:center;gap:10px}
+.mcl{font-size:.72rem;font-weight:600;width:108px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mcbs{flex:1;display:flex;flex-direction:column;gap:3px}
+.mct{background:var(--surf3);border-radius:99px;height:6px;overflow:hidden}
+.mcf{height:100%;border-radius:99px;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.mcv{display:flex;gap:6px;align-items:center;margin-top:1px;font-size:.64rem;font-family:var(--m)}
+.mc-leg{display:flex;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.mc-li{display:flex;align-items:center;gap:5px;font-size:.7rem;color:var(--t2)}
+.mc-d{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* TABLE */
+.tc{background:var(--surf);border:1px solid var(--bord);border-radius:var(--rl);box-shadow:var(--sh);overflow:hidden;margin-bottom:14px}
+.tbar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--bord);flex-wrap:wrap}
+.tt2{font-size:.82rem;font-weight:700}
+.srch{position:relative;flex:1;min-width:160px;max-width:260px}
+.srch svg{position:absolute;left:8px;top:50%;transform:translateY(-50%);opacity:.35;pointer-events:none}
+.srch input{width:100%;background:var(--surf2);border:1px solid var(--bord);border-radius:7px;padding:5px 9px 5px 28px;font-size:.76rem;color:var(--t1);transition:all var(--tr)}
+.srch input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 2px rgba(0,168,150,.12)}
+.tcnt{font-size:.68rem;color:var(--t3);margin-left:auto;white-space:nowrap}
+table{width:100%;border-collapse:collapse}
+thead th{padding:9px 12px;text-align:left;white-space:nowrap;font-size:.63rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);background:var(--surf2);border-bottom:1px solid var(--bord);cursor:pointer;user-select:none;transition:color var(--tr)}
+thead th:hover{color:var(--t1)}
+thead th.srt{color:var(--teal)}
+.si{margin-left:2px;opacity:.3;font-size:.62rem}.srt .si{opacity:1}
+tbody td{padding:9px 12px;font-size:.78rem;border-bottom:1px solid var(--bord);transition:background var(--tr)}
+tbody tr:hover td{background:var(--surf2)}
+tbody tr:last-child td{border-bottom:none}
+.pag{display:flex;align-items:center;gap:3px;justify-content:flex-end;padding:10px 14px;border-top:1px solid var(--bord)}
+.pi{font-size:.68rem;color:var(--t3);margin-right:6px}
+.pgb{width:27px;height:27px;border-radius:6px;display:grid;place-items:center;font-size:.76rem;background:var(--surf2);border:1px solid var(--bord);color:var(--t2);cursor:pointer;transition:all var(--tr)}
+.pgb:hover{background:var(--teal-l);color:var(--teal)}.pgb.on{background:linear-gradient(90deg,var(--teal),var(--sky));color:#fff;border:none}.pgb:disabled{opacity:.3;cursor:default}
+.bg{display:inline-block;padding:2px 7px;border-radius:4px;font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.bg-g{background:var(--green-l);color:var(--green)}.bg-r{background:var(--red-l);color:var(--red)}
+.bg-a{background:var(--amber-l);color:var(--amber)}.bg-t{background:var(--teal-l);color:var(--teal)}
+.bg-s{background:var(--sky-l);color:var(--sky)}.bg-o{background:var(--orange-l);color:var(--orange)}
+.tr{text-align:right}
+.cg{color:var(--green);font-weight:600}.cr2{color:var(--red);font-weight:600}
+.co{color:var(--orange);font-weight:600}.ct2{color:var(--teal);font-weight:600}
+
+/* FUNNEL */
+.fn-step{margin-bottom:11px}
+.fn-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;font-size:.75rem}
+.fn-name{font-weight:600}
+.fn-nums{display:flex;gap:8px;align-items:center}
+.fn-val{font-family:var(--m);font-size:.73rem;color:var(--t2)}
+.fn-drp{font-size:.64rem;background:var(--red-l);color:var(--red);border-radius:4px;padding:1px 5px}
+.fn-track{background:var(--surf3);border-radius:99px;height:9px;overflow:hidden}
+.fn-fill{height:100%;border-radius:99px;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.fn-pct{font-size:.62rem;color:var(--t3);text-align:right;margin-top:2px}
+
+/* HEATMAP */
+.hm-w{overflow-x:auto;padding-bottom:4px}
+.hm-g{display:grid;grid-template-columns:52px repeat(7,1fr);gap:3px;min-width:440px}
+.hm-h{font-size:.62rem;font-weight:700;color:var(--t3);text-align:center;padding:2px 0}
+.hm-l{font-size:.62rem;color:var(--t3);display:flex;align-items:center;justify-content:flex-end;padding-right:5px;height:26px}
+.hm-c{height:26px;border-radius:5px;cursor:pointer;display:grid;place-items:center;font-size:.6rem;font-weight:600;color:rgba(255,255,255,.85);transition:transform var(--tr);position:relative}
+.hm-c:hover{transform:scale(1.2);z-index:10}
+.hm-tip{position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:var(--t1);color:var(--surf);padding:3px 8px;border-radius:5px;font-size:.62rem;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .12s;z-index:30}
+.hm-c:hover .hm-tip{opacity:1}
+
+/* AB TEST */
+.ab-g{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.abc{background:var(--surf2);border:2px solid var(--bord);border-radius:var(--rl);padding:16px;text-align:center;transition:all var(--tr)}
+.abc.win{border-color:var(--teal);background:linear-gradient(160deg,var(--teal-l),var(--sky-l))}
+.abc:hover{box-shadow:var(--sh-l);transform:translateY(-2px)}
+.ab-tag{font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:5px}
+.ab-name{font-size:.86rem;font-weight:800;margin-bottom:14px}
+.ab-ms{display:flex;justify-content:space-around;gap:6px;margin-bottom:12px}
+.ab-mv{font-size:1.1rem;font-weight:800;font-family:var(--m)}
+.ab-ml{font-size:.62rem;color:var(--t3);margin-top:2px}
+.ab-w{background:linear-gradient(90deg,var(--teal),var(--sky));color:#fff;border-radius:5px;padding:4px 10px;font-size:.68rem;font-weight:700;display:inline-flex;align-items:center;gap:3px}
+
+/* ATTRIBUTION */
+.attr-b{display:flex;height:13px;border-radius:99px;overflow:hidden;gap:2px;margin:10px 0}
+.attr-s{height:100%;border-radius:2px;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.attr-l{display:flex;flex-wrap:wrap;gap:10px}
+.ali{display:flex;align-items:center;gap:5px;font-size:.72rem}
+.ald{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* TARGETS */
+.tgi{margin-bottom:13px}
+.tg-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.tg-n{font-size:.79rem;font-weight:600}
+.tg-m{font-size:.68rem;color:var(--t3);font-family:var(--m)}
+.tg-tr{background:var(--surf3);border-radius:99px;height:7px;overflow:hidden}
+.tg-f{height:100%;border-radius:99px;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.tg-ft{display:flex;justify-content:space-between;margin-top:3px;font-size:.64rem}
+
+/* ALERTS */
+.al{display:flex;gap:9px;padding:10px 12px;border-radius:8px;background:var(--surf2);border-left:3px solid var(--ac,var(--bord));margin-bottom:7px;transition:background var(--tr)}
+.al:hover{background:var(--surf3)}
+.al-ic{font-size:.95rem;flex-shrink:0;margin-top:1px}
+.al-t{font-size:.79rem;font-weight:700;margin-bottom:2px}
+.al-d{font-size:.7rem;color:var(--t2);line-height:1.5}
+.al-tm{font-size:.62rem;color:var(--t3);margin-top:2px}
+
+/* FEED */
+.fi{display:flex;gap:9px;padding:8px 0;border-bottom:1px solid var(--bord)}
+.fi:last-child{border-bottom:none}
+.fd{width:6px;height:6px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--sky));margin-top:5px;flex-shrink:0}
+.ft{font-size:.76rem;line-height:1.5}
+.ftm{font-size:.63rem;color:var(--t3);margin-top:1px}
+
+/* RECS */
+.rg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.rc{background:var(--surf2);border:1px solid var(--bord);border-radius:var(--rl);padding:14px;transition:all var(--tr)}
+.rc:hover{box-shadow:var(--sh-l);transform:translateY(-2px);border-color:var(--bord2)}
+.rc-ic{font-size:1.3rem;margin-bottom:7px}
+.rc-t{font-size:.79rem;font-weight:800;margin-bottom:4px}
+.rc-d{font-size:.71rem;color:var(--t2);line-height:1.55}
+.rc-a{margin-top:8px;font-size:.67rem;font-weight:700;color:var(--teal);display:flex;align-items:center;gap:2px;cursor:pointer}
+
+/* TOAST */
+#toast{position:fixed;bottom:20px;right:20px;background:var(--t1);color:var(--surf);padding:10px 16px;border-radius:9px;font-size:.76rem;font-weight:500;z-index:9999;box-shadow:var(--sh-l);opacity:0;transform:translateY(6px);transition:opacity .2s,transform .2s;pointer-events:none;max-width:320px}
+#toast.show{opacity:1;transform:translateY(0)}
+
+/* FOOTER */
+.foot{text-align:center;padding:14px;font-size:.68rem;color:var(--t4);border-top:1px solid var(--bord);display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:wrap}
+.foot .ht{color:#f43f5e;animation:hb 1.4s ease infinite;display:inline-block}
+.foot strong{color:var(--orange)}.fsep{color:var(--bord2)}
+
+/* RESPONSIVE */
+@media(max-width:1280px){.kg{grid-template-columns:repeat(4,1fr)}.g6535,.g2,.g3{grid-template-columns:1fr}.rg,.ab-g{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){:root{--sbw:0px}.sb{transform:translateX(-256px);width:256px}.sb.open{transform:translateX(0)}.main{margin-left:0}.kg{grid-template-columns:repeat(2,1fr)}.rg,.ab-g{grid-template-columns:1fr}#mob{display:flex!important}.top-strip{display:none}}
+</style>
+</head>
+<body>
+
+<div id="ldr">
+  <div class="ldr-wrap">
+    <img class="ldr-img" src="data:image/jpeg;base64,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" alt="United Pharmacy">
+    <div class="ldr-bar"><div class="ldr-fill"></div></div>
+    <div class="ldr-txt">Loading analytics…</div>
+  </div>
+</div>
+
+<nav class="sb" id="sb">
+  <div class="sb-head">
+    <img class="sb-logo" src="data:image/jpeg;base64,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" alt="UP">
+    <div><div class="sb-name">United Pharmacy</div><div class="sb-sub">صيدلية المتحدة · Analytics</div></div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-g">Overview</div>
+    <div class="ni on" onclick="nav('s-kpi',this)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>KPI Dashboard</div>
+    <div class="ni" onclick="nav('s-comp',this)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>Promo Compensation<span class="nb">New</span></div>
+    <div class="ni" onclick="nav('s-rev',this)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1,12 5,7 9,9 15,3"/></svg>Revenue</div>
+    <div class="sb-g">Analytics</div>
+    <div class="ni" onclick="nav('s-brands',this)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1l2 4 5 .7-3.5 3.4.8 5L8 12l-4.3 2.1.8-5L1 5.7l5-.7z"/></svg>Brands</div>
+    <div class="ni" onclick="nav('s-stores',this)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="7" width="14" height="8" rx="1"/><path d="M1 7l2-4h10l2 4M5 15V11h6v4"/></svg>Stores</div>
+    <div class="ni" onclick="nav('s-sup',this)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12l-1 7H3L2 3zM5 13a1 1 0 1 0 2 0M10 13a1 1 0 1 0 2 0"/></svg>Suppliers</div>
+    <div class="sb-g">Promotions</div>
+    <div class="ni" onclick="nav('s-funnel',this)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 2h14l-5 7v5l-4-2V9z"/></svg>Conversion Funnel</div>
+    <div class="ni" onclick="nav('s-ab',this)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="4" cy="4" r="3"/><circle cx="12" cy="12" r="3"/><path d="M7 4h5a1 1 0 0 1 1 1v2M9 12H4a1 1 0 0 1-1-1V9"/></svg>A/B Testing</div>
+    <div class="ni" onclick="nav('s-table',this)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="14" height="14" rx="1"/><line x1="1" y1="5" x2="15" y2="5"/><line x1="1" y1="9" x2="15" y2="9"/><line x1="6" y1="5" x2="6" y2="15"/></svg>SKU Table</div>
+    <div class="ni" onclick="nav('s-alerts',this)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1a5 5 0 0 1 5 5v4l1.5 2H1.5L3 10V6a5 5 0 0 1 5-5zM6 13a2 2 0 0 0 4 0"/></svg>Alerts<span class="nb">4</span></div>
+  </div>
+  <div class="sb-foot">
+    <div class="th-row"><span class="th-lbl">Dark Mode</span>
+      <div class="sw" id="sw" onclick="toggleTheme()"><div class="sw-k"></div></div>
+    </div>
+    <div class="cr">Made with <span class="ht">&#9829;</span> by <strong>Omar Shalaby</strong><br>United Pharmacy © 2026</div>
+  </div>
+</nav>
+
+<div class="main">
+  <header class="top">
+    <button id="mob" onclick="document.getElementById('sb').classList.toggle('open')">&#9776;</button>
+    <img class="top-logo" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCADCAMIDASIAAhEBAxEB/8QAHAABAAIDAQEBAAAAAAAAAAAAAAYHBAUIAQMC/8QARRAAAQQBAwIDBAYHBQUJAAAAAQACAwQFBhESByETMUEUUWGBFSIycZGhCBcjQlLB0hZigpOiJFNUcrIzQ1VWg5ax0+H/xAAbAQEAAQUBAAAAAAAAAAAAAAAABQECAwYHBP/EADQRAAIBAwEFBQYGAwEAAAAAAAABAgMEEQUGEiExURNBYXHwFCKRobHhFjJCgcHRFSNTUv/aAAwDAQACEQMRAD8A7LREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAERRHV/UTTOmnur2bZs3G+dasOb2/8x8m/cTv8FdGLk8JHnubqjaw7StJRXiS5FRl/rnfdKfYcDWjjB7eNM55I+QGyzcF1xifM2PN4YxRnYGWrJy2/wALvT5rM7WqlnBBw2s0qU9ztf3w8fQuZFh4bKY/MY+O/jLcdqtJ9l7D+R9x+B7rMXnawbFCcZxUovKYREQuCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiKL9VczLgtCZK9XeWWCwQwuHmHPIbuPiASfkqxi5NJGC5rxt6Mq0+UU38CuesHU2f2mbAacsGJkZLLNyN31nH1awjyA9T5+7402SSSSSSfMrxTzo/odmrspNPfc5mMp7eKGnZ0rj5MB9B23J+737iXjGFCBxWtcXmv3qjzlLku5L7d7IGi64g0jpeCl7HFgMaICNi012kn03JI3J+PmqT60dP4dOSMzOHjcMZM/hJFuXeA8+Wx/hPx8j29QrKd1Gct3GCQ1TZG6sLft95SS547vHxRH+mesrWkc4yXk+THTuDbcAPm3+ID+Ifn5eq6iqWIbdWK1WlbLDMwPje07hzSNwR8Nlxir1/R51X7TRl0vdl3mrgyVC53d0f7zP8ACe/3H4LHd0srfRJbF6y6dX2Kq/dl+XwfT9/r5lvIiKOOnhERAEREAREQBERAEREAREQBERAEREAUB691H2unNp7Nz7NNFMQPdy4n/qU+WJmsfXy2JtY20CYbMTon7eexG26uhLdkmePULb2q1qUV+pNfI43V0/o05au0ZTCSOa2d7m2YgfN4A4u/D6v4qpM/i7WFzNrFXWcZ60hY73H3EfAjYj71+tOZe1gs3Uy1J201aQPA37OHq0/AjcfNS9WHaQaRxXSL2Wl38as1+V4a+T+B2GsHP4urmsPaxV1nKvZjLH+8e4j4g7H5LzT+Vq5vDVcrSfygsxh7fePeD8Qdx8lnqH4pncf9den1jJfs0yhHdDs7yPHMY4jfsSHj+SzMF0h1RhsxVylPM41s9aQSN7P2O3mD28iNwfvU1ynVPTeOydnH2IcgZq0ronlsTSOTTsdvreXZY364NK/7nJ/5Lf6lLq01Gccqm2n4GjrT9mqNTKqJSi//AE+DRYTd+I5bB23fZeqvP1waV/3OT/yW/wBSDq/pUn/scmP/AEW/1LB/iL3/AJP4Gy/iDTP+8fiWGiimJ6iaRyT2xx5VkEjuwZYaY/lue35qVNc1zQ5pBaRuCD2K8dahVovFSLT8VgkLe7oXMd6jNSXg8nqIixHoCIiAIiIAiIgCIiAIiIAiIgCIsbKXq2Nx89+3JwggYXvd8B/NUlJRTb5Iqk5PC5lW/pC6U9sx0epqUW89UeHaAH2ovR3+E/kfgqHXZMT6eWxYe3hZp24vUbtexw8iPuK5Y6h6am0rqexjH7ugP7Ss8/vRknb5jYg/EKRsq6nHdz5HL9ttHdGt7ZBcJcJeD+/18yffo5ajkiv2dMzu3hmabFff91425D5jv8j71ea5q6CVJrHUepNGHcK0UskhHkAWFg3+bgulVgu0lU4GybGVqlXTEp/pbS8uH9sojrjpexQzr8/Wic+lcIMrmt7RSbAd/cD57+/dVsuvbEMViB8E8TJYnji5jhuHD3EKCZPpNpS5YdLELtLkdyyvKOP4OB2Wz6XtHTo0VSuE+HBNdPEhNd2Nq17iVe0a955afDj4HPqK9/1NaZ/8QzH+bH/9a8d0a03t9XIZbf05SRkf9ClfxNY9X8CC/BWqdF8SiVOOmWurmnb8VK7M6XEyO4vY47+D/eb7viF51E6e3dLQi/DP7Zj3P4mTjs6Mny5D3H3/AP4oSCQCPQqQfs2p2/D3ov5f0yIXtuiXizmM4/NfymdfMc1zQ5pBaRuCD5heqIdH8nJk9CUnyu5SVy6Bx39Gn6v+nZS9cwuKLoVZUpc08HcbO5jdW8K8eUkn8QiIsJ6QiIgCIiAIiIAiIgCIiAKoeuWpPEnj05Uk+pHtJb29XebW/Lz/AA9ysnV2YZgtO3Mo8BxhZ+zb/E89mj8SPkuaLlia3altWZDJNM8ve8+ZJO5K0/a3U+woq2hznz8vubTsxpyrVXcT5R5ef2/otXobqUFkmm7coBG8lQk+fq5n8x81v+sGjnar0+w0o2nJ1Hcq+5A5g/aYSew37H7wPiqk6f4+9kdW0Ise90UscoldKBv4bWncn+XzXSa9eyN7WqWnvL8jwn1X25EdtjpdtWqypS5VFxXR9f58yF9KdExaPxD/AB3MmyVnY2JG92tA8mN+A/M/JTRFWvVrXFjEyjC4eUMtlodYmHcxA+TR/eI77+gP4TWo6jTs6Tr1n9/BETo+kZULO1jhL1llhWr9Gq4Ns3K8BPkJJQ3f8SvrBNFPGJIZWSsPk5jgR+IXKliaaxM6aeV8sjju573FxJ+JKtnoPhbLIbObmlmZDJ+yhiDyGv2+04j128h81rumbTTv7pUY0sJ9+eS6vgbJqOz0LK2daVXL6Y5v4lqoo/rPVuL0pWrzZETyGd5ayOFoLuw3J7kdh2HzCi7+semgwltPKOdt2HhMG/8ArW9UNOuq8N+nBtdTRrnWbG1qOnWqqMl3Ej6oGD+wGY9o+x7Odh/e3HH89lzIpz1F6h29UwihXrmnjg4Ocwu3fKR5cj6Ae4KDLe9AsKtnbtVeDbzjocr2s1WhqN2pUOMYrGevH6F8/o9l39i7XLy+kH8fu8OP+e6sdQ7o3jZMboOmJmlsllzrBBHkHHt+QCmK0bVKiqXlWUeWWdR0GlKlptGMue6giIvASwREQBERAEREAREQBERAVp1+tPjwePptJDZrBe7Y+fFvl/q/JUyry65YyS5pSO7Ezk6lMHv+DHdj+fFUauWbWRmtRblyaWPXnk6PszKLsUo803n15YLq6EYuGDT9jKkAz2ZjHv7mN9PxJ/JWOqY6QazpYiF+EyrxDBJL4kM5+y1x2BDvcO2+/wB6t1+SxzKhtvvVm1wN/FMreG3377LdNnrm3lYQjTa91cV0fealrlCvG9nKonxfDxXcYmrMzBgMDZyc+x8Ju0bP43n7Lfx/Ldc1ZC3PfvT3bUhkmneXvcfUkqXdVdXM1HkmVaL3fR1U/UJ7eK/1ft7vQfP3qFLS9ptVV7cdnTeYR+b73/CNt2e0x2lDtKi9+XyXQ2elsNPns7WxlfcGV3137b8GD7TvkF0nVgp4nFRwRcIKlWLYFx2DWtHmT+e6hfRjTf0VhDlrUe1u80FvId2Reg+fn+HuUv1HiYs3h58XPPYghnHGR0Lg1xG/cbkHsVt+yulRtaCqVeEp4z4L1xNV2m1KdzVcKPFQzjxfrgc49QtRSam1NPf3Irs/ZVmH92MHsfvPc/NR1Xz+p3TH/F5T/NZ/Qn6ndMf8ZlP81n9C7JR2g06hTVOGcLwOD3OyOsXNWVapuuUnl8ShlNOmuh7upr8c9mKSHExuDpZSCPF2/cb7z8fRW3iemmkce8P+jzbePI2X8x+HYfkpfFGyKMRxsaxjRsGtGwAXgv8AahSg4W0Wm+9/wiU0nYeUKiqXsk0v0rv82I2MjjbHG0NY0bNaBsAPcv0iLTjo6WAiIgCIiAIiIAiIgCIiAIiID52IYrFeSCeNskUjS17HDcOB8wVQ3UTQtzT1mS5SjfYxbnbteBuYf7rvh8Vfq8exr2Fj2hzXDYtI3BCidW0ijqVLdnwkuT6fYktM1Srp9TehxT5rr9zk9Nyr01N0vweSe6fHudjJz3IjHKIn/l9PkQodP0j1C2QiG7jpGehc97T+HE//ACue3OzWoUJYjDeXVesm9W+0NjWjmUt19GV4ph0w0lJqLLtsWYyMZWcHTOP/AHh9GD+fw+8KU6f6RFk7Jc5kWSMadzDWB2d8C47H8ArRx9Krj6kdSlXjggjGzGMGwCldG2Wquqqt2sRXd3vz8CN1baSkqbp2ry339PLxPs0BoAAAA8gF6iLoZooREQBERAEREAREQBERAEREAREQBERAEREARU3h9cWZ9cVMqaWdGmcjnbGJqW3ZNj4nWQ0xbGtw3bFzhfxPMnkSSO4AmlTW7ma9Gkc1gL2JmteK7FW3vZJBfbH3dxLTux/H63FwHZZp284/X15FqkmTBFh5q87G4m1kGUbd91eIyCtUYHzS7D7LASASfvChWM1rfzWSl0hmcNltE529Ukmx0z3QWBIxoAc6Nw5MMjOQJY4HYbHuFZCnKayireCwUUBwGt6FLT2qc1nMjddUw+bsUnSTxsLt2uY1scbYmjkC5wDQQXEnYkrB1n1Fis9JNW5/S89ujlcLA9skVymYp6soAcOcUg9WkEbgggq9W9RyxjvwU3kWYirLTmt8lW0b1B1HmHuyDdO5C54ELWsjPgw1o5RHuAPUu+sdz3+C1vSq7loepTsTlpK0stnTrcsDWu2Zo4/GtPd4e0r3NOxcdnBrfq8QOwAF3s8km33BSTLfRaDqHqeHR2kLmorFWS1HVdE0xRuDXO8SVkY7n3F+/wAlqstncrX6wYrAV5OePsafu3H1uLQZJo5q7WHkRuO0jxtvt37+SxxpSksrx+RVtImiKJ6G1n/aG/kcNksJdwOcxojfao2Xsk3jk34SRvYS17DxI37EEEELAp9T8L+rU68ydeejjmXZKkjdw9zC226tzJ7DjyHI+4e9V7GecY6fPkN5E7RV/jupT5c7i6uT0lmcPi8zMa+MyNsxgTS8S5rXxBxfFzDTx5dz6gKwFbOnKH5gmmERFYVCIiAIiIAiIgCIiAIiICGVumWk6+q3akiq2hY9pfcZXNuQ1YrL2lrp2Q78GyEF31tv3ifNaWfoppmxZrWbGd1jNPVcXV5JM/Yc6IlvElpJ3BIJG49Ctx05uZDJXNZQ38jYsNqZ6anV5Fo8GEQwvDW7AdwZHdzufL3LAxGtL1HHYXEfQ2Z1DlZ8EzKGdj67BOB4Yed3PaAeUg7bDzG3bcj1qddPEZcfMsxHoefqhwn/AJn1x/7js/1L4T9FNMT269ybOawls1uXs8z8/OXxchs7i4ndu47HbzTKdRA7HXc/hYsjNGNIPzlOCdkQrSjbk1x2PiB432cNwNgdtz3WS/qjQp4ozZPHWYL1XGR5K9VdJCJGRP5bFgEjg8u8N7gxpJ2A32JAN29dLk2U9w1U/QXSf0fLUqZrVdTnP7U0ty8j2tsBweJuDt2ueHgO3cD3C+x6J4K/ZvXdSZ/UOat5GZkt/e6a0FkMDQxj4YeLS0BoGx39e6y+pGrLUumnT6bbeDIM3RpzXoXsY1vK1CyVuzjyc3Z5Ydh5n4HbbdVrd+liMXNj8jZovkzNKtK6AAl8UszWPbsQR3B89tx6Iq1w8Znzf9DEehusJp3FYhuVZUhJZlbkly2yQ82uke1rXdj5N2YBsopf6N6CmmrWMbjZ8BYrh7Wz4a0+nI5rtt2ucwjk3sNgfLbtstDmMlrHG6ggtC5mLGFm1BUhx0ErGQz2GOglM0RDgw8ObWcTJsezu5bspfT12y1hrVxmCvR26l2WjYpzTwRujljAdtzMnA8g5vHY9+XpsdrN2tT96MufiV4Pg0QvWHR2KzGynTl1HmajmCSRl7VVhjRK2WIsHEhwP1fEfy9HRtG3fcSbHdJtN0prtpmR1JNet0/YjdnzE8k8MJe15bG8u3Zu5rSdvPZZMHUOvclw0eK0/l8h9MY36SrGIwgCEPia/lykGxZ4zSR6+TeRWJX6msnfRDNKZvhfyNrF13l9fZ1uAzcoz+17AiCQh32e3mr3O5lHGfn66FMRNPmejWLriTKYfI6qt5dzY4OU2pbETnQiTdzTINzs0Oe4N8ifdvusLB9B9N2dLQY3N/T1ONk0j/o6HUE01Zm0rixw3DRuRs8/V7OcfPzMvPUSsdKPzrMLe5RS2oJ6ss0ETopa7yyRnJ0gYXEtPHiTyA37LLqa3qZNsL9P427l2Or1bMzoeDPBisAOjJD3Al3E8i0DsPiQC7e6Sxl/EbsTU0+kenIMtj8jNltT35MfaZarx3szNPG2Vn2XcHEg7KwlEsJraPKyRwxYe5HZ+lpsZPA+SPnA6Jpc57tnfZ47Ebbkhze3dS1eerKo3/sZdHHcERFiLgiIgCIiAIiIAiIgCIiAiUmiTFmslkMTqbNYiPKTNnu1avgOjkkDGsL2mSJz2FzWNB4uHluNj3WRV0dRqaioZendu146GLOLgpM4eA2Alp9Wl/IFjO/L0UlRZO1n1KYRAMZ0txlPGR4x+dzNqmzAOwHhymAb1SCBuWxg8wD5/DuCsyjoEUMjXyVHU+ar3W0YqFqZrax9siiLjGXtMXEObzcA5ob2Ox37bTNFV1pvmxuohGW6cUr4ycDc/mqtHIZCHJPqRPiMcdmOWOXmwvjc4Bzomks3Ldy47AlbjWGmW6kp0a0uWyFIU7cNxrqwi5SSRODmcubHDbcb7ABb9FTtZ8HnkMI0eqdOR5+TEvkyd2mcZdbdj9nEf7SRrS0B/Nju2zneW3mtKenVMahObhzuYgm+kJr4jaYTGHTRtjkaAYydiGN2O/Id9iASFNkSNWcVhMYRDNKdPqunJ8K+nnsvNHh8fLj4Ip/BLXxPe155kRgkgxs2II7N+J3+VTpxVrsxTBqLMvbjM1YzMPIV/rTzeNzDtoh9X/aJdgNj9bz7BThFV1pvv9emN1ECHTChHkfbYM/mYnGXIOMe8Lm8LsjZJmDeMkDk0cXA8gCRvsVk6Z6e1dOWa0+Iz2XgMdGtSsNPgObbZXbxic8GPs8MPElnHcbb9wCJoiOtNrDY3URLSWKrS6pzOq4ql2l7e2OEV7MJjJexu0k4ae4LwImHfzEDSOxUtRFZKTk8sJYCIitKhERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAf/9k=" alt="UP">
+    <div class="top-ttl">Suncare Analytics <em>— Q1 2026</em></div>
+    <div class="top-strip" id="topStrip"></div>
+    <div style="display:flex;align-items:center;gap:5px"><div class="live"></div><span style="font-size:.67rem;color:var(--t3)">Live</span></div>
+    <div class="tbts">
+      <button class="tbt" onclick="exportCSV()">↓ CSV</button>
+      <button class="tbt" onclick="window.print()">⎙ PDF</button>
+      <button class="tbt p" onclick="scrollFc()">📈 Forecast</button>
+    </div>
+  </header>
+
+  <div class="pg">
+
+    <!-- FILTERS -->
+    <div class="fb">
+      <span class="fl">Month</span>
+      <select class="fsl" id="fMonth" onchange="applyF()">
+        <option value="all">All Months</option>
+        <option value="January">January</option>
+        <option value="February">February</option>
+        <option value="March">March</option>
+      </select>
+      <div class="fsp"></div>
+      <span class="fl">Brand</span>
+      <select class="fsl" id="fBrand" onchange="applyF()"><option value="all">All Brands</option></select>
+      <div class="fsp"></div>
+      <span class="fl">Chart Mode</span>
+      <select class="fsl" id="fMode" onchange="applyF()">
+        <option value="monthly">Monthly</option>
+        <option value="cumulative">Cumulative</option>
+      </select>
+      <div class="fa">
+        <div class="ftags" id="fTags"></div>
+        <button class="fab fab-r" onclick="resetF()">✕ Reset</button>
+        <button class="fab fab-a" onclick="applyF(true)">▶ Apply</button>
+      </div>
+    </div>
+
+    <!-- STAT STRIP -->
+    <div id="s-kpi"></div>
+    <div class="strip"><div class="strip-in" id="statStrip"></div></div>
+
+    <!-- KPI CARDS -->
+    <div class="sh">
+      <span class="sh-t">KPI Dashboard</span>
+      <span class="sh-tag">Q1 2026</span>
+      <div class="sh-line"></div>
+      <span style="font-size:.67rem;color:var(--t3)" id="kpiSub">486 Stores · 53 Brands · 199 SKUs</span>
+    </div>
+    <div class="kg" id="kpiGrid"></div>
+
+    <!-- PROMO COMPENSATION -->
+    <div id="s-comp"></div>
+    <div class="sh">
+      <span class="sh-t">Promo Compensation</span>
+      <span class="sh-tag">Supplier Adjustments</span>
+      <div class="sh-line"></div>
+    </div>
+    <div class="cc">
+      <div class="cc-ic">&#129309;</div>
+      <div class="cc-main">
+        <div class="cc-t">Supplier Promo Compensation — Impact on Net Profitability</div>
+        <div class="cc-d">Suppliers reimburse a portion of discounts given to customers, converting raw losses into net profit. Compensation covers <strong>38.6%</strong> of total discount spend in Q1.</div>
+      </div>
+      <div class="cc-nums" id="ccNums"></div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <div class="ch"><div><div class="ct">Raw vs Net Margin by Month</div><div class="cs">Before and after supplier compensation</div></div></div>
+        <div class="cw" style="height:230px"><canvas id="mcChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div><div class="ct">Supplier Comp.</div><div class="cs">Top 8 suppliers by value</div></div></div>
+        <div class="cw" style="height:230px"><canvas id="scChart"></canvas></div>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <div class="ch">
+        <div><div class="ct">Brand Margin — Raw vs Net</div><div class="cs">Impact of supplier compensation per brand</div></div>
+        <div class="mc-leg">
+          <div class="mc-li"><div class="mc-d" style="background:var(--bord2)"></div>Raw Margin %</div>
+          <div class="mc-li"><div class="mc-d" style="background:linear-gradient(90deg,var(--teal),var(--sky))"></div>Net Margin %</div>
+        </div>
+      </div>
+      <div class="mcg" id="mcBars"></div>
+    </div>
+
+    <!-- REVENUE -->
+    <div id="s-rev"></div>
+    <div class="sh">
+      <span class="sh-t">Revenue Analysis</span>
+      <span class="sh-tag">Monthly</span>
+      <div class="sh-line"></div>
+      <div class="btns">
+        <button class="pb on" onclick="setRM(this,'monthly')">Monthly</button>
+        <button class="pb" onclick="setRM(this,'cumulative')">Cumulative</button>
+        <button class="pb" onclick="setRM(this,'margin')">Margin View</button>
+      </div>
+    </div>
+    <div class="g6535">
+      <div class="card">
+        <div class="ch"><div><div class="ct" id="rvT">Revenue · Discount · Compensation</div><div class="cs" id="rvS">Monthly comparison Q1 2026</div></div></div>
+        <div class="cw" style="height:240px"><canvas id="rvChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div><div class="ct">Profit Bridge</div><div class="cs">Revenue → COGS → Raw Profit → Compensation → Net Profit</div></div></div>
+        <div class="cw" style="height:240px"><canvas id="brChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- BRANDS -->
+    <div id="s-brands"></div>
+    <div class="sh">
+      <span class="sh-t">Brand Intelligence</span>
+      <span class="sh-tag">Top 12</span>
+      <div class="sh-line"></div>
+      <div class="btns">
+        <button class="pb on" onclick="setBM(this,'sales')">Revenue</button>
+        <button class="pb" onclick="setBM(this,'net_margin')">Net Margin</button>
+        <button class="pb" onclick="setBM(this,'comp')">Compensation</button>
+        <button class="pb" onclick="setBM(this,'disc_rate')">Disc. Rate</button>
+      </div>
+    </div>
+    <div class="g6535">
+      <div class="card">
+        <div class="ch"><div><div class="ct" id="bct">Brand Revenue & Net Profit</div><div class="cs" id="bcs">Click a bar to filter</div></div></div>
+        <div class="cw" style="height:280px"><canvas id="bChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div><div class="ct">Revenue Market Share</div><div class="cs" id="donutSub">Brand contribution</div></div></div>
+        <div class="cw" style="height:280px"><canvas id="dChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- STORES + SCATTER -->
+    <div id="s-stores"></div>
+    <div class="sh"><span class="sh-t">Store Performance</span><span class="sh-tag">Top 15</span><div class="sh-line"></div></div>
+    <div class="g2">
+      <div class="card">
+        <div class="ch"><div><div class="ct">Top 15 Stores — Revenue & Net Profit</div><div class="cs">Net sales vs net profit</div></div></div>
+        <div class="cw" style="height:250px"><canvas id="stChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div><div class="ct">Discount Rate vs Revenue</div><div class="cs">Bubble size = units sold · Color = profitability</div></div></div>
+        <div class="cw" style="height:250px"><canvas id="scatChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- SUPPLIERS -->
+    <div id="s-sup"></div>
+    <div class="sh"><span class="sh-t">Supplier Adjustments</span><span class="sh-tag">Top 8</span><div class="sh-line"></div></div>
+    <div class="g2">
+      <div class="card">
+        <div class="ch"><div><div class="ct">Supplier Comp. Rate</div><div class="cs">% of discount reimbursed by supplier</div></div></div>
+        <div class="cw" style="height:240px"><canvas id="srChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div><div class="ct">Net Margin After Compensation</div><div class="cs">Profitability per supplier</div></div></div>
+        <div class="cw" style="height:240px"><canvas id="smChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- FUNNEL + HEATMAP -->
+    <div id="s-funnel"></div>
+    <div class="sh"><span class="sh-t">Conversion Funnel & Timing</span><span class="sh-tag">Customer Behaviour</span><div class="sh-line"></div></div>
+    <div class="g2">
+      <div class="card">
+        <div class="ch"><div><div class="ct">Promotion Conversion Funnel</div><div class="cs">From impression to purchase</div></div></div>
+        <div id="fnWrap" style="padding:4px 0"></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div><div class="ct">Performance Heatmap</div><div class="cs">Best days & hours for promotions</div></div></div>
+        <div class="hm-w"><div class="hm-g" id="hmGrid"></div></div>
+      </div>
+    </div>
+
+    <!-- AB TEST -->
+    <div id="s-ab"></div>
+    <div class="sh"><span class="sh-t">A/B Test Results</span><span class="sh-tag">3 Variants</span><div class="sh-line"></div></div>
+    <div class="ab-g" id="abGrid"></div>
+
+    <!-- ATTRIBUTION + BEHAVIOUR -->
+    <div class="g2">
+      <div class="card">
+        <div class="ch"><div><div class="ct">Multi-Touch Attribution</div><div class="cs">Estimated channel revenue contribution</div></div></div>
+        <div id="attrWrap"></div>
+        <div class="cw" style="height:190px;margin-top:10px"><canvas id="rdChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div><div class="ct">Customer Behaviour Split</div><div class="cs">Promo-driven · Organic · Repeat</div></div></div>
+        <div class="cw" style="height:240px"><canvas id="bhChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div id="s-table"></div>
+    <div class="sh"><span class="sh-t">SKU-Level Performance</span><span class="sh-tag">Full P&L</span><div class="sh-line"></div></div>
+    <div class="tc">
+      <div class="tbar">
+        <span class="tt2">📋 Item Campaign Data</span>
+        <div class="srch">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="4"/><path d="m9 9 4 4"/></svg>
+          <input type="text" placeholder="Search item or brand…" oninput="filterT(this.value)" id="tq">
+        </div>
+        <select class="fsl" id="tBrand" onchange="filterT(document.getElementById('tq').value)" style="min-width:90px"><option value="all">All Brands</option></select>
+        <select class="fsl" id="tStat" onchange="filterT(document.getElementById('tq').value)">
+          <option value="all">All Status</option>
+          <option value="Profitable">Profitable</option>
+          <option value="Break Even">Break Even</option>
+          <option value="At Risk">At Risk</option>
+          <option value="Loss">Loss</option>
+        </select>
+        <span class="tcnt" id="tCnt"></span>
+      </div>
+      <div style="overflow-x:auto">
+        <table id="skuT">
+          <thead><tr>
+            <th onclick="srtT(0)">Item<span class="si">↕</span></th>
+            <th onclick="srtT(1)">Brand<span class="si">&#8645;</span></th>
+            <th onclick="srtT(2)" class="tr">Units<span class="si">↕</span></th>
+            <th onclick="srtT(3)" class="tr">Revenue<span class="si">↕</span></th>
+            <th onclick="srtT(4)" class="tr">Discount<span class="si">↕</span></th>
+            <th onclick="srtT(5)" class="tr">Disc%<span class="si">↕</span></th>
+            <th onclick="srtT(6)" class="tr">Comp.<span class="si">↕</span></th>
+            <th onclick="srtT(7)" class="tr">Raw Profit<span class="si">↕</span></th>
+            <th onclick="srtT(8)" class="tr">Net Profit<span class="si">↕</span></th>
+            <th onclick="srtT(9)" class="tr">Margin%<span class="si">↕</span></th>
+            <th onclick="srtT(10)">Status<span class="si">↕</span></th>
+          </tr></thead>
+          <tbody id="tBody"></tbody>
+        </table>
+      </div>
+      <div class="pag" id="tPag"></div>
+    </div>
+
+    <!-- TARGETS + FORECAST -->
+    <div class="sh">
+      <span class="sh-t">Goals & Forecast</span>
+      <span class="sh-tag">Q1 Targets · Q2 Forecast</span>
+      <div class="sh-line"></div>
+      <span id="fcBadge" style="font-size:.68rem;color:var(--teal);font-weight:700">📈 Q2 Forecast: SAR 320K+ Net Profit</span>
+    </div>
+    <div class="g2">
+      <div class="card" id="tgCard"></div>
+      <div class="card">
+        <div class="ch"><div><div class="ct">Revenue & Profit Forecast</div><div class="cs">Q1 Actual + Q2 2026 Projection</div></div></div>
+        <div class="cw" style="height:215px"><canvas id="fcChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- RECS -->
+    <div id="s-alerts"></div>
+    <div class="sh"><span class="sh-t">Insights & Recommendations</span><span class="sh-tag">AI-Powered</span><div class="sh-line"></div></div>
+    <div class="rg" id="recGrid"></div>
+
+    <!-- ALERTS + FEED -->
+    <div class="sh"><span class="sh-t">Alerts & Activity</span><span class="sh-tag">4 Active</span><div class="sh-line"></div></div>
+    <div class="g2">
+      <div class="card">
+        <div class="ch"><div><div class="ct">⚠️ Alerts</div><div class="cs">Issues requiring attention</div></div></div>
+        <div id="alerts"></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div><div class="ct">📡 Activity Feed</div><div class="cs">Latest campaign events</div></div></div>
+        <div id="feed"></div>
+      </div>
+    </div>
+
+  </div>
+  <footer class="foot">
+    Made with <span class="ht">&#9829;</span> by <strong>Omar Shalaby</strong>
+    <span class="fsep">&middot;</span> United Pharmacy
+    <span class="fsep">&middot;</span> &#1589;&#1610;&#1583;&#1604;&#1610;&#1577; &#1575;&#1604;&#1605;&#1578;&#1581;&#1583;&#1577;
+    <span class="fsep">&middot;</span> Suncare Q1 2026
+  </footer>
+</div>
+<div id="toast"></div>
+
+<script>
+'use strict';
+const DB={"totals":{"sales":880843.0,"disc":789340.0,"cogs":919035.0,"full":1670183.0,"qty":13432,"comp":304782.0,"stores":486,"brands":53,"skus":199,"txns":11831,"raw_profit":-38192.0,"net_profit":266590.0,"raw_margin":-4.3,"net_margin":30.3,"disc_rate":47.3,"comp_cov":38.6,"aov":65.6},"monthly":[{"Month":"January","sales":277176.55,"disc":204503.77,"cogs":261937.63,"full":481680.32,"qty":3886,"comp":94842.25,"txns":3304,"raw_profit":15238.92,"net_profit":110081.17,"raw_margin":5.5,"net_margin":39.7,"disc_rate":42.5,"comp_cov":46.4,"aov":71.3},{"Month":"February","sales":291562.75,"disc":302439.5,"cogs":333146.44,"full":594002.25,"qty":4694,"comp":101370.03,"txns":4066,"raw_profit":-41583.69,"net_profit":59786.34,"raw_margin":-14.3,"net_margin":20.5,"disc_rate":50.9,"comp_cov":33.5,"aov":62.1},{"Month":"March","sales":312103.36,"disc":282396.97,"cogs":323950.93,"full":594500.33,"qty":4852,"comp":108570.1,"txns":4461,"raw_profit":-11847.57,"net_profit":96722.53,"raw_margin":-3.8,"net_margin":31.0,"disc_rate":47.5,"comp_cov":38.4,"aov":64.3}],"brands":[{"Brand":"Bioderma","sales":536314.5,"disc":571102.5,"cogs":664450.2,"full":1107417.0,"qty":8105,"comp":234060.12,"comp_rate":0.44,"skus":18,"stores":478,"raw_profit":-128135.7,"net_profit":105924.42,"raw_margin":-23.9,"net_margin":19.8,"disc_rate":51.6,"rev_share":60.9,"comp_cov":41.0},{"Brand":"La Roche","sales":76082.68,"disc":39677.98,"cogs":50594.3,"full":115760.66,"qty":1004,"comp":0.0,"comp_rate":0.0,"skus":6,"stores":372,"raw_profit":25488.38,"net_profit":25488.38,"raw_margin":33.5,"net_margin":33.5,"disc_rate":34.3,"rev_share":8.6,"comp_cov":0.0},{"Brand":"Eucerin","sales":65570.39,"disc":54030.11,"cogs":50008.49,"full":119600.5,"qty":835,"comp":22004.66,"comp_rate":0.34,"skus":8,"stores":344,"raw_profit":15561.9,"net_profit":37566.56,"raw_margin":23.7,"net_margin":57.3,"disc_rate":45.2,"rev_share":7.4,"comp_cov":40.7},{"Brand":"Beesline","sales":23971.66,"disc":12217.34,"cogs":21162.0,"full":36189.0,"qty":499,"comp":5959.67,"comp_rate":0.25,"skus":6,"stores":227,"raw_profit":2809.66,"net_profit":8769.33,"raw_margin":11.7,"net_margin":36.6,"disc_rate":33.8,"rev_share":2.7,"comp_cov":48.8},{"Brand":"Cetaphil","sales":18159.98,"disc":31624.02,"cogs":27381.2,"full":49784.0,"qty":445,"comp":5769.66,"comp_rate":0.32,"skus":7,"stores":210,"raw_profit":-9221.22,"net_profit":-3451.56,"raw_margin":-50.8,"net_margin":-19.0,"disc_rate":63.5,"rev_share":2.1,"comp_cov":18.2},{"Brand":"Avene","sales":17837.54,"disc":4949.29,"cogs":13584.24,"full":22786.83,"qty":145,"comp":620.87,"comp_rate":0.05,"skus":11,"stores":101,"raw_profit":4253.3,"net_profit":4874.17,"raw_margin":23.8,"net_margin":27.3,"disc_rate":21.7,"rev_share":2.0,"comp_cov":12.5},{"Brand":"Derma Pella","sales":13372.75,"disc":13650.25,"cogs":9458.05,"full":27023.0,"qty":188,"comp":16324.74,"comp_rate":1.22,"skus":3,"stores":99,"raw_profit":3914.7,"net_profit":20239.44,"raw_margin":29.3,"net_margin":151.3,"disc_rate":50.5,"rev_share":1.5,"comp_cov":119.6},{"Brand":"Eveline","sales":13270.51,"disc":13740.49,"cogs":8103.3,"full":27011.0,"qty":435,"comp":0.0,"comp_rate":0.0,"skus":11,"stores":170,"raw_profit":5167.21,"net_profit":5167.21,"raw_margin":38.9,"net_margin":38.9,"disc_rate":50.9,"rev_share":1.5,"comp_cov":0.0},{"Brand":"Strongville","sales":10886.2,"disc":3547.28,"cogs":4618.56,"full":14433.48,"qty":174,"comp":1112.37,"comp_rate":0.1,"skus":6,"stores":55,"raw_profit":6267.64,"net_profit":7380.01,"raw_margin":57.6,"net_margin":67.8,"disc_rate":24.6,"rev_share":1.2,"comp_cov":31.4},{"Brand":"Nivea","sales":10032.16,"disc":-0.4,"cogs":7930.85,"full":10031.76,"qty":160,"comp":808.4,"comp_rate":0.08,"skus":16,"stores":101,"raw_profit":2101.31,"net_profit":2909.71,"raw_margin":20.9,"net_margin":29.0,"disc_rate":-0.0,"rev_share":1.1,"comp_cov":-202099.5},{"Brand":"Starville","sales":9210.88,"disc":3212.12,"cogs":3975.36,"full":12423.0,"qty":230,"comp":941.18,"comp_rate":0.1,"skus":14,"stores":59,"raw_profit":5235.52,"net_profit":6176.7,"raw_margin":56.8,"net_margin":67.1,"disc_rate":25.9,"rev_share":1.0,"comp_cov":29.3},{"Brand":"H&J","sales":7840.16,"disc":4999.84,"cogs":3210.0,"full":12840.0,"qty":88,"comp":1574.81,"comp_rate":0.2,"skus":8,"stores":24,"raw_profit":4630.16,"net_profit":6204.97,"raw_margin":59.1,"net_margin":79.1,"disc_rate":38.9,"rev_share":0.9,"comp_cov":31.5}],"stores":[{"StoreCode":"P060","sales":23305.07,"disc":17853.28,"cogs":23666.09,"qty":301,"comp":9331.28,"brands":17,"raw_profit":-361.02,"net_profit":8970.26,"net_margin":38.5,"disc_rate":76.6},{"StoreCode":"P117","sales":23059.44,"disc":18246.74,"cogs":24188.28,"qty":309,"comp":9626.46,"brands":12,"raw_profit":-1128.84,"net_profit":8497.62,"net_margin":36.9,"disc_rate":79.1},{"StoreCode":"P410","sales":18385.86,"disc":11296.58,"cogs":17036.76,"qty":212,"comp":7418.52,"brands":11,"raw_profit":1349.1,"net_profit":8767.62,"net_margin":47.7,"disc_rate":61.4},{"StoreCode":"P435","sales":14516.7,"disc":8997.11,"cogs":12751.16,"qty":176,"comp":5453.61,"brands":14,"raw_profit":1765.54,"net_profit":7219.15,"net_margin":49.7,"disc_rate":62.0},{"StoreCode":"P460","sales":10362.58,"disc":3680.12,"cogs":7795.84,"qty":121,"comp":3184.15,"brands":16,"raw_profit":2566.74,"net_profit":5750.89,"net_margin":55.5,"disc_rate":35.5},{"StoreCode":"P420","sales":8612.44,"disc":6143.73,"cogs":8003.64,"qty":121,"comp":2441.24,"brands":21,"raw_profit":608.8,"net_profit":3050.04,"net_margin":35.4,"disc_rate":71.3},{"StoreCode":"P104","sales":7384.74,"disc":4286.9,"cogs":5695.88,"qty":108,"comp":1935.95,"brands":18,"raw_profit":1688.86,"net_profit":3624.81,"net_margin":49.1,"disc_rate":58.1},{"StoreCode":"P010","sales":7291.11,"disc":7191.19,"cogs":8450.64,"qty":106,"comp":2946.35,"brands":8,"raw_profit":-1159.53,"net_profit":1786.82,"net_margin":24.5,"disc_rate":98.6},{"StoreCode":"P483","sales":7212.49,"disc":6503.87,"cogs":8103.62,"qty":104,"comp":2996.04,"brands":8,"raw_profit":-891.13,"net_profit":2104.91,"net_margin":29.2,"disc_rate":90.2},{"StoreCode":"P107","sales":6626.03,"disc":3611.48,"cogs":5368.65,"qty":80,"comp":1647.14,"brands":14,"raw_profit":1257.38,"net_profit":2904.52,"net_margin":43.8,"disc_rate":54.5},{"StoreCode":"P337","sales":6614.63,"disc":3129.7,"cogs":5073.5,"qty":71,"comp":2301.6,"brands":9,"raw_profit":1541.13,"net_profit":3842.73,"net_margin":58.1,"disc_rate":47.3},{"StoreCode":"P112","sales":6505.76,"disc":4769.5,"cogs":6236.94,"qty":90,"comp":2342.89,"brands":13,"raw_profit":268.82,"net_profit":2611.71,"net_margin":40.1,"disc_rate":73.3},{"StoreCode":"P353","sales":5919.86,"disc":4089.61,"cogs":5067.61,"qty":90,"comp":1913.56,"brands":15,"raw_profit":852.25,"net_profit":2765.81,"net_margin":46.7,"disc_rate":69.1},{"StoreCode":"P485","sales":5833.03,"disc":3410.99,"cogs":4942.91,"qty":66,"comp":2110.32,"brands":7,"raw_profit":890.12,"net_profit":3000.44,"net_margin":51.4,"disc_rate":58.5},{"StoreCode":"P362","sales":5740.2,"disc":4793.79,"cogs":5654.42,"qty":87,"comp":2219.2,"brands":12,"raw_profit":85.78,"net_profit":2304.98,"net_margin":40.2,"disc_rate":83.5}],"suppliers":[{"Supplier Name":"NAGHI BROTHERS (BIODERMA)","sales":536314.5,"disc":571102.5,"cogs":664450.2,"qty":8105,"comp":234060.12,"comp_rate":0.44,"net_profit":105924.42,"net_margin":19.8,"comp_cov":41.0},{"Supplier Name":"Al-Naghi - Eucerin","sales":63937.29,"disc":53983.21,"cogs":49000.49,"qty":823,"comp":21351.42,"comp_rate":0.33,"net_profit":36288.22,"net_margin":56.8,"comp_cov":39.6},{"Supplier Name":"BEAUTY ONE EST.","sales":44170.93,"disc":28031.9,"cogs":26078.0,"qty":543,"comp":0.0,"comp_rate":0.0,"net_profit":18092.93,"net_margin":41.0,"comp_cov":0.0},{"Supplier Name":"ARABIAN FOOD SUPPLIES (VICHY)","sales":37446.93,"disc":14507.9,"cogs":27078.3,"qty":518,"comp":0.0,"comp_rate":0.0,"net_profit":10368.63,"net_margin":27.7,"comp_cov":0.0},{"Supplier Name":"Medical & Pharmacceutical Company L","sales":28308.02,"disc":12684.64,"cogs":23648.42,"qty":578,"comp":7037.75,"comp_rate":0.25,"net_profit":11697.35,"net_margin":41.3,"comp_cov":55.5},{"Supplier Name":"Raghad United Medical Company","sales":22653.4,"disc":8183.05,"cogs":9973.62,"qty":434,"comp":2314.76,"comp_rate":0.1,"net_profit":14994.54,"net_margin":66.2,"comp_cov":28.3},{"Supplier Name":"Cigalah\u00a0Pieere\u00a0Fabre","sales":18815.43,"disc":5353.51,"cogs":14500.2,"qty":161,"comp":598.59,"comp_rate":0.03,"net_profit":4913.82,"net_margin":26.1,"comp_cov":11.2},{"Supplier Name":"TAMER - GALDERMA","sales":18159.98,"disc":31624.02,"cogs":27381.2,"qty":445,"comp":5769.66,"comp_rate":0.32,"net_profit":-3451.56,"net_margin":-19.0,"comp_cov":18.2},{"Supplier Name":"Cigalah Healthcare Company","sales":15689.62,"disc":9049.38,"cogs":14843.4,"qty":194,"comp":6253.19,"comp_rate":0.4,"net_profit":7099.41,"net_margin":45.2,"comp_cov":69.1},{"Supplier Name":"Cigalah Health Care - Jergens - Vie","sales":13372.75,"disc":13650.25,"cogs":9458.05,"qty":188,"comp":16324.74,"comp_rate":1.22,"net_profit":20239.44,"net_margin":151.3,"comp_cov":119.6}],"items":[{"item_desc":"Bioderma Photoderm Cr.Spf50+ Invisible 4","Brand":"Bioderma","sales":179893.75,"disc":260899.25,"cogs":264475.8,"full":440793.0,"qty":3417,"comp":78509.82,"stores":445,"raw_profit":-84582.05,"net_profit":-6072.23,"disc_rate":59.2,"raw_margin":-47.0,"net_margin":-3.4,"rev_share":20.42,"status":"Loss"},{"item_desc":"Bioderma Photoderm Aquaf.Spf50+Inv 40ml","Brand":"Bioderma","sales":92732.92,"disc":109499.08,"cogs":121339.2,"full":202232.0,"qty":1487,"comp":40470.8,"stores":384,"raw_profit":-28606.28,"net_profit":11864.52,"disc_rate":54.1,"raw_margin":-30.8,"net_margin":12.8,"rev_share":10.53,"status":"Profitable"},{"item_desc":"Photoderm Xdfnse Ultra-Fld Sp50+ Inv40Ml","Brand":"Bioderma","sales":79350.33,"disc":33069.67,"cogs":67452.0,"full":112420.0,"qty":770,"comp":34630.33,"stores":217,"raw_profit":11898.33,"net_profit":46528.66,"disc_rate":29.4,"raw_margin":15.0,"net_margin":58.6,"rev_share":9.01,"status":"Profitable"},{"item_desc":"Bioderma Photoderm Aq.Fluid Inv.Kit(1+1)","Brand":"Bioderma","sales":43788.33,"disc":42571.67,"cogs":51816.0,"full":86360.0,"qty":635,"comp":19110.25,"stores":171,"raw_profit":-8027.67,"net_profit":11082.58,"disc_rate":49.3,"raw_margin":-18.3,"net_margin":25.3,"rev_share":4.97,"status":"Profitable"},{"item_desc":"Eucerin Sun Gel-Cr. Spf50+ Oil Cont.50Ml","Brand":"Eucerin","sales":41905.16,"disc":36974.84,"cogs":31747.84,"full":78880.0,"qty":544,"comp":13993.94,"stores":275,"raw_profit":10157.32,"net_profit":24151.26,"disc_rate":46.9,"raw_margin":24.2,"net_margin":57.6,"rev_share":4.76,"status":"Profitable"},{"item_desc":"Bioderma Photoderm A.Fluid Spf50+Lig.40M","Brand":"Bioderma","sales":37328.75,"disc":39103.25,"cogs":45859.2,"full":76432.0,"qty":562,"comp":16291.13,"stores":260,"raw_profit":-8530.45,"net_profit":7760.68,"disc_rate":51.2,"raw_margin":-22.9,"net_margin":20.8,"rev_share":4.24,"status":"Profitable"},{"item_desc":"La Roche P.Cicaplast B5+ Spf50 Blam 40Ml","Brand":"La Roche","sales":28684.9,"disc":14021.66,"cogs":22257.78,"full":42706.56,"qty":409,"comp":0.0,"stores":246,"raw_profit":6427.12,"net_profit":6427.12,"disc_rate":32.8,"raw_margin":22.4,"net_margin":22.4,"rev_share":3.26,"status":"Profitable"},{"item_desc":"La Roche Anthelios Spf50+ Inv.Fluid 50Ml","Brand":"La Roche","sales":24701.47,"disc":17592.79,"cogs":14490.0,"full":42294.26,"qty":322,"comp":0.0,"stores":208,"raw_profit":10211.47,"net_profit":10211.47,"disc_rate":41.6,"raw_margin":41.3,"net_margin":41.3,"rev_share":2.8,"status":"Profitable"},{"item_desc":"Bioderma Photoderm Spray Spf50+ 200Ml","Brand":"Bioderma","sales":22324.35,"disc":20635.65,"cogs":25776.0,"full":42960.0,"qty":240,"comp":9742.87,"stores":126,"raw_profit":-3451.65,"net_profit":6291.22,"disc_rate":48.0,"raw_margin":-15.5,"net_margin":28.2,"rev_share":2.53,"status":"Profitable"},{"item_desc":"Bioderma Photoderm Aknt Mat Spf30 40Ml","Brand":"Bioderma","sales":21809.12,"disc":21558.88,"cogs":26020.8,"full":43368.0,"qty":312,"comp":9518.01,"stores":164,"raw_profit":-4211.68,"net_profit":5306.33,"disc_rate":49.7,"raw_margin":-19.3,"net_margin":24.3,"rev_share":2.48,"status":"Profitable"},{"item_desc":"Bioderma Photoderm Lot.Spf50+ Ultra 200M","Brand":"Bioderma","sales":18628.14,"disc":20221.86,"cogs":23310.0,"full":38850.0,"qty":222,"comp":8129.75,"stores":122,"raw_profit":-4681.86,"net_profit":3447.89,"disc_rate":52.1,"raw_margin":-25.1,"net_margin":18.5,"rev_share":2.11,"status":"Break Even"},{"item_desc":"Eucerin Sun Creme Spf50+ 50Ml","Brand":"Eucerin","sales":16668.04,"disc":16161.46,"cogs":13214.05,"full":32829.5,"qty":235,"comp":5566.18,"stores":158,"raw_profit":3453.99,"net_profit":9020.17,"disc_rate":49.2,"raw_margin":20.7,"net_margin":54.1,"rev_share":1.89,"status":"Profitable"},{"item_desc":"Beesline Ultrascreen Cream Spf50 60Ml","Brand":"Beesline","sales":14272.88,"disc":9127.12,"cogs":14742.0,"full":23400.0,"qty":360,"comp":3548.43,"stores":200,"raw_profit":-469.12,"net_profit":3079.31,"disc_rate":39.0,"raw_margin":-3.3,"net_margin":21.6,"rev_share":1.62,"status":"Break Even"},{"item_desc":"La Roche P.Anthelios Spf50+ U/Long 50Ml","Brand":"La Roche","sales":13711.58,"disc":7577.29,"cogs":8910.0,"full":21288.87,"qty":162,"comp":0.0,"stores":122,"raw_profit":4801.58,"net_profit":4801.58,"disc_rate":35.6,"raw_margin":35.0,"net_margin":35.0,"rev_share":1.56,"status":"Break Even"},{"item_desc":"Bioderma Photoderm Cr.Spf50+ Light 40Ml","Brand":"Bioderma","sales":11462.44,"disc":13305.56,"cogs":14860.8,"full":24768.0,"qty":192,"comp":5002.48,"stores":100,"raw_profit":-3398.36,"net_profit":1604.12,"disc_rate":53.7,"raw_margin":-29.6,"net_margin":14.0,"rev_share":1.3,"status":"Break Even"},{"item_desc":"Cetaphil Sun Spf 50+ Light Gel 50Ml","Brand":"Cetaphil","sales":8921.59,"disc":15458.41,"cogs":13409.0,"full":24380.0,"qty":212,"comp":2834.5,"stores":134,"raw_profit":-4487.41,"net_profit":-1652.91,"disc_rate":63.4,"raw_margin":-50.3,"net_margin":-18.5,"rev_share":1.01,"status":"At Risk"},{"item_desc":"Derma Pella Photo Block Gel Spf50+ 75Gm","Brand":"Derma Pella","sales":8280.98,"disc":8829.02,"cogs":5988.5,"full":17110.0,"qty":118,"comp":10108.98,"stores":69,"raw_profit":2292.48,"net_profit":12401.46,"disc_rate":51.6,"raw_margin":27.7,"net_margin":149.8,"rev_share":0.94,"status":"Profitable"},{"item_desc":"Photoderm Xdfnse Ultr-Fldsp50+ Tnt1 40Ml","Brand":"Bioderma","sales":7382.89,"disc":2399.11,"cogs":5869.2,"full":9782.0,"qty":67,"comp":3222.06,"stores":48,"raw_profit":1513.69,"net_profit":4735.75,"disc_rate":24.5,"raw_margin":20.5,"net_margin":64.1,"rev_share":0.84,"status":"Break Even"},{"item_desc":"La Roche Effaclar Matte Shine Ctrl Cream","Brand":"La Roche","sales":7368.84,"disc":396.29,"cogs":4048.32,"full":7765.13,"qty":96,"comp":0.0,"stores":75,"raw_profit":3320.52,"net_profit":3320.52,"disc_rate":5.1,"raw_margin":45.1,"net_margin":45.1,"rev_share":0.84,"status":"Break Even"},{"item_desc":"Photoderm Xdfnse Ultr-Fldsp50+ Tnt2 40Ml","Brand":"Bioderma","sales":6259.8,"disc":1624.2,"cogs":4730.4,"full":7884.0,"qty":54,"comp":2731.92,"stores":35,"raw_profit":1529.4,"net_profit":4261.32,"disc_rate":20.6,"raw_margin":24.4,"net_margin":68.1,"rev_share":0.71,"status":"Break Even"},{"item_desc":"Cetaphil Sun Lotion Spf50+ 50Ml Sens.Skn","Brand":"Cetaphil","sales":6115.72,"disc":11150.28,"cogs":9496.3,"full":17266.0,"qty":178,"comp":1943.04,"stores":119,"raw_profit":-3380.58,"net_profit":-1437.54,"disc_rate":64.6,"raw_margin":-55.3,"net_margin":-23.5,"rev_share":0.69,"status":"At Risk"},{"item_desc":"Bioderma Pediatrics Spray Spf50+ F200Ml","Brand":"Bioderma","sales":5448.29,"disc":323.71,"cogs":3463.2,"full":5772.0,"qty":37,"comp":2377.76,"stores":25,"raw_profit":1985.09,"net_profit":4362.85,"disc_rate":5.6,"raw_margin":36.4,"net_margin":80.1,"rev_share":0.62,"status":"Break Even"},{"item_desc":"Maxon Max 100 Cr.50Ml","Brand":"Maxon","sales":4992.58,"disc":5072.42,"cogs":3824.7,"full":10065.0,"qty":61,"comp":1997.03,"stores":42,"raw_profit":1167.88,"net_profit":3164.91,"disc_rate":50.4,"raw_margin":23.4,"net_margin":63.4,"rev_share":0.57,"status":"Break Even"},{"item_desc":"Acm Medisun Spf 50 Gel 40 Ml","Brand":"ACM","sales":4959.04,"disc":2435.96,"cogs":2142.0,"full":7395.0,"qty":51,"comp":0.0,"stores":13,"raw_profit":2817.04,"net_profit":2817.04,"disc_rate":32.9,"raw_margin":56.8,"net_margin":56.8,"rev_share":0.56,"status":"Break Even"},{"item_desc":"Beesline Suntan Oil Per.Deep Tan 200Ml","Brand":"Beesline","sales":4803.4,"disc":1182.6,"cogs":2324.7,"full":5986.0,"qty":82,"comp":1194.19,"stores":39,"raw_profit":2478.7,"net_profit":3672.89,"disc_rate":19.8,"raw_margin":51.6,"net_margin":76.5,"rev_share":0.55,"status":"Break Even"}]};
+
+/* ═══ PALETTE ═══ */
+const P={
+  teal:'#00a896',tealL:'rgba(0,168,150,.12)',
+  orange:'#f07800',orangeL:'rgba(240,120,0,.12)',
+  sky:'#00b4d8',skyL:'rgba(0,180,216,.12)',
+  green:'#10b981',greenL:'rgba(16,185,129,.13)',
+  red:'#e53935',redL:'rgba(229,57,53,.13)',
+  amber:'#f59e0b',amberL:'rgba(245,158,11,.13)',
+  purple:'#7c3aed',
+  all:['#00a896','#f07800','#00b4d8','#7c3aed','#f59e0b','#10b981','#e53935','#f43f5e','#6366f1','#84cc16','#64748b','#ec4899']
+};
+
+/* ═══ STATE ═══ */
+const S={dark:false,rm:'monthly',bm:'sales',ts:3,ta:false,tp:1};
+let FL={month:'all',brand:'all'};
+const PG=8;
+let filtI=DB.items.slice();
+
+/* ═══ CHART ENGINE ═══ */
+const CH={};
+function mk(id,cfg){const c=document.getElementById(id);if(!c)return;if(CH[id])CH[id].destroy();CH[id]=new Chart(c,cfg);return CH[id];}
+function gc(){const d=S.dark;return{t:d?'#e5edf8':'#0b1628',t2:d?'#7e93ad':'#3d5070',g:d?'#1f2e46':'#dce3f0',s:d?'#0f1624':'#fff'};}
+function bo(){
+  const c=gc();
+  return{responsive:true,maintainAspectRatio:false,animation:{duration:450,easing:'easeInOutQuart'},
+    plugins:{
+      legend:{labels:{color:c.t,font:{family:'Inter',size:11,weight:'500'},boxWidth:10,padding:14}},
+      tooltip:{backgroundColor:c.t,titleColor:c.s,bodyColor:c.s,cornerRadius:8,padding:10,
+        titleFont:{family:'Inter',weight:'700',size:12},bodyFont:{family:'Inter',size:11}}},
+    scales:{
+      x:{ticks:{color:c.t2,font:{family:'Inter',size:11}},grid:{color:c.g},border:{color:c.g}},
+      y:{ticks:{color:c.t2,font:{family:'Inter',size:11}},grid:{color:c.g},border:{color:c.g}}}};
+}
+
+/* ═══ FORMAT ═══ */
+const fK=n=>(n<0?'-':'')+'SAR '+(Math.abs(n)/1000).toFixed(0)+'K';
+const fKd=n=>(n<0?'-':'')+'SAR '+(Math.abs(n)/1000).toFixed(1)+'K';
+const fSAR=n=>(n<0?'-':'')+'SAR '+Math.abs(n).toLocaleString('en',{maximumFractionDigits:0});
+const fP=n=>n.toFixed(1)+'%';
+const fN=n=>n.toLocaleString('en');
+
+/* ═══ SPARK ═══ */
+function spark(id,data,col){
+  mk(id,{type:'line',data:{labels:data.map((_,i)=>i),datasets:[{data,borderColor:col,borderWidth:1.8,pointRadius:0,tension:.4,fill:false}]},
+    options:{responsive:true,maintainAspectRatio:false,animation:{duration:700},plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}});
+}
+
+/* ═══ FILTERED DATA ═══ */
+function getM(){return FL.month==='all'?DB.monthly:DB.monthly.filter(x=>x.Month===FL.month);}
+function getT(rows){return rows.reduce((a,r)=>({
+  sales:a.sales+r.sales, disc:a.disc+r.disc, cogs:a.cogs+r.cogs,
+  qty:a.qty+r.qty, comp:a.comp+r.comp, full:a.full+(r.full||0),
+  raw:a.raw+r.raw_profit, net:a.net+r.net_profit
+}),{sales:0,disc:0,cogs:0,qty:0,comp:0,full:0,raw:0,net:0});}
+
+/* ═══ KPI CARDS ═══ */
+function renderKPIs(){
+  const M=getM();const T=getT(M);
+  const netM=T.sales>0?T.net/T.sales*100:0;
+  const rawM=T.sales>0?T.raw/T.sales*100:0;
+  const discR=T.full>0?T.disc/T.full*100:0;
+  const aov=T.qty>0?T.sales/T.qty:0;
+  const compCov=T.disc>0?T.comp/T.disc*100:0;
+
+  // Top strip
+  document.getElementById('topStrip').innerHTML=[
+    {v:fK(T.sales),l:'Revenue'},{v:fK(T.net),l:'Net Profit'},{v:fP(netM),l:'Margin'}
+  ].map(x=>`<div class="ts"><div class="ts-v">${x.v}</div><div class="ts-l">${x.l}</div></div>`).join('');
+
+  // Stat strip — 8 stats
+  document.getElementById('statStrip').innerHTML=[
+    {v:fK(T.sales),l:'Net Revenue'},{v:fK(T.disc),l:'Total Discount'},
+    {v:fK(T.comp),l:'Supplier Compensation'},{v:fK(T.raw),l:'Raw Profit'},
+    {v:fK(T.net),l:'Net Profit'},{v:fP(netM),l:'Net Margin'},
+    {v:fN(T.qty),l:'Units Sold'},{v:fP(discR),l:'Disc. Rate'}
+  ].map(x=>`<div class="sc"><div class="sc-v">${x.v}</div><div class="sc-l">${x.l}</div></div>`).join('');
+
+  // Comp callout nums
+  document.getElementById('ccNums').innerHTML=[
+    {v:fK(T.comp),l:'Total Compensation'},
+    {v:fP(compCov),l:'% of Discount'},
+    {v:fP(netM-rawM),l:'Margin Lift'}
+  ].map(x=>`<div class="cc-n"><div class="cc-nv">${x.v}</div><div class="cc-nl">${x.l}</div></div>`).join('');
+
+  // KPI definitions
+  const KPIS=[
+    {id:'rev',l:'Net Revenue',ic:'&#128176;',v:fK(T.sales),ch:12.4,up:true,c:P.orange,bg:P.orangeL,sp:[247,262,277,292,312],sub:'vs prior period'},
+    {id:'np', l:'Net Profit',   ic:'&#9989;',   v:fK(T.net), ch:30.3,up:T.net>0,c:P.teal,bg:P.tealL,sp:[80,90,110,60,97],sub:'incl. compensation'},
+    {id:'nm', l:'Net Margin', ic:'&#128202;', v:fP(netM),ch:netM,up:netM>0,c:P.sky,bg:P.skyL,sp:[32,28,40,21,31],sub:'after supplier comp.pensation'},
+    {id:'rm', l:'Raw Margin',  ic:'&#9888;',   v:fP(rawM),ch:rawM,up:rawM>0,c:rawM<0?P.red:P.green,bg:rawM<0?P.redL:P.greenL,sp:[5,-14,-4,-14,-4],sub:'before compensation'},
+    {id:'cp', l:'Supplier Compensation',ic:'&#129309;', v:fK(T.comp),ch:8.2,up:true,c:P.teal,bg:P.tealL,sp:[80,88,95,101,109],sub:'from suppliers'},
+    {id:'di', l:'Total Discount',  ic:'&#127991;', v:fK(T.disc),ch:18.6,up:false,c:P.amber,bg:P.amberL,sp:[160,180,204,302,282],sub:'given to customers'},
+    {id:'un', l:'Units Sold',ic:'&#128230;', v:fN(T.qty),ch:8.9,up:true,c:P.sky,bg:P.skyL,sp:[3200,3500,3886,4694,4852],sub:'486 stores'},
+    {id:'av', l:'Avg. Order Value',ic:'&#128722;',v:'SAR '+aov.toFixed(1),ch:3.2,up:true,c:P.purple,bg:P.skyL,sp:[61,63,65,65,66],sub:'per transaction'}
+  ];
+
+  document.getElementById('kpiGrid').innerHTML=KPIS.map((k,i)=>`
+    <div class="kc" style="--kc:${k.c};--kcg:${k.bg};animation-delay:${i*.055}s" onclick="this.classList.toggle('sel')">
+      <div class="kc-b"></div>
+      <div class="kc-t"><div class="kc-l">${k.l}</div><div class="kc-i" style="background:${k.bg};color:${k.c}">${k.ic}</div></div>
+      <div class="kc-v">${k.v}</div>
+      <div class="kc-f">
+        <div class="kch ${k.up?'up':'dn'}">${k.up?'&#8593;':'&#8595;'} ${Math.abs(k.ch).toFixed(1)}%</div>
+        <span class="kc-s">${k.sub}</span>
+        <canvas class="ksp" id="sp${k.id}"></canvas>
+      </div>
+    </div>`).join('');
+
+  KPIS.forEach(k=>spark('sp'+k.id,k.sp,k.c));
+}
+
+/* ═══ MARGIN COMPARISON CHART ═══ */
+function renderMC(){
+  const c=gc();const rows=DB.monthly;const opts=bo();
+  opts.plugins.legend.position='bottom';
+  opts.scales.y={...opts.scales.y,ticks:{...opts.scales.y.ticks,callback:v=>v+'%'},
+    title:{display:true,text:'Margin %',color:c.t2,font:{size:10}}};
+  opts.scales.y2={position:'right',ticks:{color:P.orange,font:{family:'Inter',size:10},callback:v=>'SAR '+v+'K'},
+    grid:{display:false},border:{display:false},title:{display:true,text:'Compensation (SAR K)',color:P.orange,font:{size:10}}};
+  mk('mcChart',{type:'bar',data:{labels:rows.map(r=>r.Month),
+    datasets:[
+      {label:'Raw Margin %',data:rows.map(r=>r.raw_margin),backgroundColor:rows.map(r=>r.raw_margin<0?P.red+'aa':P.amber+'aa'),borderRadius:5},
+      {label:'Net Margin %',data:rows.map(r=>r.net_margin),backgroundColor:P.teal+'cc',borderRadius:5},
+      {label:'Compensation (SAR K)',data:rows.map(r=>+(r.comp/1000).toFixed(1)),type:'line',
+        borderColor:P.orange,backgroundColor:P.orangeL,fill:true,tension:.4,
+        pointRadius:5,pointBackgroundColor:P.orange,pointBorderColor:'#fff',pointBorderWidth:2,yAxisID:'y2'}
+    ]},options:opts});
+}
+
+/* ═══ SUPPLIER COMP CHART ═══ */
+function renderSC(){
+  const sups=DB.suppliers.slice(0,8);const opts=bo();
+  opts.indexAxis='y';opts.plugins.legend.position='bottom';
+  opts.scales.x.ticks.callback=v=>'SAR '+(v/1000).toFixed(0)+'K';
+  mk('scChart',{type:'bar',data:{
+    labels:sups.map(s=>s['Supplier Name'].length>24?s['Supplier Name'].substring(0,24)+'…':s['Supplier Name']),
+    datasets:[
+      {label:'Compensation',data:sups.map(s=>+s.comp.toFixed(0)),backgroundColor:P.teal+'bb',borderRadius:4},
+      {label:'Net Profit',data:sups.map(s=>+s.net_profit.toFixed(0)),backgroundColor:P.orange+'99',borderRadius:4}
+    ]},options:opts});
+}
+
+/* ═══ BRAND MARGIN BARS ═══ */
+function renderMCBars(){
+  const brands=DB.brands.filter(b=>b.sales>0).slice(0,10);
+  const mx=Math.max(...brands.map(b=>Math.max(Math.abs(b.net_margin),Math.abs(b.raw_margin))),1);
+  document.getElementById('mcBars').innerHTML=brands.map(b=>{
+    const aw=Math.min(Math.abs(b.net_margin)/mx*100,100);
+    const rw=Math.min(Math.abs(b.raw_margin)/mx*100,100);
+    const aC=b.net_margin<0?P.red:P.teal;
+    const rC=b.raw_margin<0?P.red+'55':'#c4cfE4';
+    const nc=b.net_margin<0?'var(--red)':'var(--teal)';
+    const rc=b.raw_margin<0?'var(--red)':'var(--t3)';
+    return `<div class="mcr">
+      <div class="mcl" title="${b.Brand}">${b.Brand}</div>
+      <div class="mcbs">
+        <div class="mct"><div class="mcf" style="width:0%;background:${rC}" data-w="${rw}%"></div></div>
+        <div class="mct"><div class="mcf" style="width:0%;background:linear-gradient(90deg,${aC},${b.net_margin<0?P.red:P.sky})" data-w="${aw}%"></div></div>
+      </div>
+      <div class="mcv">
+        <span style="color:${rc}">${fP(b.raw_margin)}</span>
+        <span style="color:var(--t4)">&#8594;</span>
+        <span style="color:${nc};font-weight:700">${fP(b.net_margin)}</span>
+      </div>
+    </div>`;
+  }).join('');
+  setTimeout(()=>document.querySelectorAll('.mcf').forEach(el=>el.style.width=el.dataset.w),400);
+}
+
+/* ═══ REVENUE CHART ═══ */
+let RM='monthly';
+function renderRV(){
+  const M=getM();const c=gc();const opts=bo();opts.plugins.legend.position='bottom';
+  const lbl=M.map(r=>r.Month);
+  let ds;
+  if(RM==='margin'){
+    opts.scales.y.ticks.callback=v=>v+'%';
+    document.getElementById('rvT').textContent='Raw vs Net Margin by Month';
+    document.getElementById('rvS').textContent='Impact of compensation on margin';
+    ds=[
+      {label:'Raw Margin %',data:M.map(r=>r.raw_margin),backgroundColor:M.map(r=>r.raw_margin<0?P.red+'aa':P.amber+'aa'),borderRadius:6,type:'bar'},
+      {label:'Net Margin %',data:M.map(r=>r.net_margin),borderColor:P.teal,backgroundColor:P.tealL,fill:true,tension:.4,pointRadius:5,pointBackgroundColor:P.teal,pointBorderColor:'#fff',pointBorderWidth:2,type:'line'}
+    ];
+  } else {
+    let s,d,cp;
+    if(RM==='cumulative'){
+      let cs=0,cd=0,cc=0;
+      s=M.map(r=>{cs+=r.sales;return+cs.toFixed(0);});d=M.map(r=>{cd+=r.disc;return+cd.toFixed(0);});cp=M.map(r=>{cc+=r.comp;return+cc.toFixed(0);});
+      document.getElementById('rvT').textContent='Revenue, Discount & Compensation — Cumulative';
+      document.getElementById('rvS').textContent='Cumulative totals Q1 2026';
+    } else {
+      s=M.map(r=>+r.sales.toFixed(0));d=M.map(r=>+r.disc.toFixed(0));cp=M.map(r=>+r.comp.toFixed(0));
+      document.getElementById('rvT').textContent='Revenue · Discount · Compensation';
+      document.getElementById('rvS').textContent='Monthly comparison Q1 2026';
+    }
+    opts.scales.y.ticks.callback=v=>'SAR '+(v/1000).toFixed(0)+'K';
+    opts.scales.y2={position:'right',ticks:{color:c.t2,font:{family:'Inter',size:10},callback:v=>'SAR '+(v/1000).toFixed(0)+'K'},grid:{display:false},border:{color:c.g}};
+    ds=[
+      {label:'Net Revenue',data:s,backgroundColor:P.orange+'cc',borderRadius:6,yAxisID:'y'},
+      {label:'Discount',data:d,borderColor:P.red,backgroundColor:P.redL,type:'line',fill:true,tension:.4,pointRadius:4,pointBackgroundColor:P.red,pointBorderColor:'#fff',pointBorderWidth:2,yAxisID:'y2'},
+      {label:'Compensation',data:cp,borderColor:P.teal,backgroundColor:P.tealL,type:'line',fill:true,tension:.4,pointRadius:4,pointBackgroundColor:P.teal,pointBorderColor:'#fff',pointBorderWidth:2,yAxisID:'y2'}
+    ];
+  }
+  mk('rvChart',{type:'bar',data:{labels:lbl,datasets:ds},options:opts});
+}
+function setRM(el,mode){el.closest('.btns').querySelectorAll('.pb').forEach(b=>b.classList.remove('on'));el.classList.add('on');RM=mode;renderRV();}
+
+/* ═══ BRIDGE CHART ═══ */
+function renderBR(){
+  const M=getM();const T=getT(M);const c=gc();const opts=bo();
+  opts.indexAxis='y';opts.plugins.legend.display=false;
+  opts.scales.x.ticks.callback=v=>'SAR '+(v/1000).toFixed(0)+'K';
+  const items=[
+    {l:'Net Revenue',v:T.sales,c:P.orange},
+    {l:'minus COGS',v:-T.cogs,c:P.red},
+    {l:'= Raw Profit',v:T.raw,c:T.raw<0?P.red:P.green},
+    {l:'+ Supplier Compensation',v:T.comp,c:P.teal},
+    {l:'= Net Profit',v:T.net,c:P.teal}
+  ];
+  mk('brChart',{type:'bar',data:{labels:items.map(x=>x.l),datasets:[{data:items.map(x=>+x.v.toFixed(0)),backgroundColor:items.map(x=>x.c+'bb'),borderRadius:5}]},options:opts});
+}
+
+/* ═══ BRAND CHART ═══ */
+let BM='sales';
+function renderBC(){
+  const c=gc();const brands=DB.brands.filter(b=>b.sales>0);
+  let vals,lbl,cols;
+  if(BM==='sales'){
+    vals=brands.map(b=>+b.sales.toFixed(0));lbl='Revenue (SAR)';cols=brands.map((_,i)=>P.all[i%P.all.length]+'cc');
+    document.getElementById('bct').textContent='Brand Revenue & Net Profit';
+    document.getElementById('bcs').textContent='Click to filter';
+  } else if(BM==='net_margin'){
+    vals=brands.map(b=>b.net_margin);lbl='Net Margin %';
+    cols=brands.map(b=>b.net_margin<0?P.red+'cc':b.net_margin>50?P.teal+'cc':P.orange+'cc');
+    document.getElementById('bct').textContent='Net Margin % by Brand';
+    document.getElementById('bcs').textContent='After supplier compensation';
+  } else if(BM==='comp'){
+    vals=brands.map(b=>+b.comp.toFixed(0));lbl='Compensation (SAR)';cols=brands.map(()=>P.teal+'cc');
+    document.getElementById('bct').textContent='Supplier Compensation by Brand';
+    document.getElementById('bcs').textContent='Total compensation received';
+  } else {
+    vals=brands.map(b=>b.disc_rate);lbl='Disc. Rate %';
+    cols=brands.map(b=>b.disc_rate>50?P.red+'cc':b.disc_rate>30?P.amber+'cc':P.green+'cc');
+    document.getElementById('bct').textContent='Discount Rate by Brand';
+    document.getElementById('bcs').textContent='>50% = over-discounted';
+  }
+  const opts=bo();opts.indexAxis='y';opts.plugins.legend.display=false;
+  opts.scales.x.ticks.callback=(BM==='sales'||BM==='comp')?v=>'SAR '+(v/1000).toFixed(0)+'K':v=>v+'%';
+  opts.onClick=(e,els)=>{if(els.length){const br=brands[els[0].index].Brand;document.getElementById('fBrand').value=br;applyF(true);}};
+  mk('bChart',{type:'bar',data:{labels:brands.map(b=>b.Brand),datasets:[{label:lbl,data:vals,backgroundColor:cols,borderRadius:4}]},options:opts});
+  renderDonut();
+}
+function setBM(el,mode){el.closest('.btns').querySelectorAll('.pb').forEach(b=>b.classList.remove('on'));el.classList.add('on');BM=mode;renderBC();}
+
+function renderDonut(){
+  const c=gc();const brands=DB.brands.filter(b=>b.sales>0);
+  const opts=bo();opts.cutout='60%';opts.scales={};opts.plugins.legend.position='right';opts.plugins.legend.labels.font={family:'Inter',size:10};
+  opts.plugins.tooltip.callbacks={label:ctx=>{const t=brands.reduce((a,b)=>a+b.sales,0);return` ${fP(ctx.raw/t*100)} (${fK(ctx.raw)})`;}};
+  mk('dChart',{type:'doughnut',data:{labels:brands.map(b=>b.Brand),datasets:[{data:brands.map(b=>+b.sales.toFixed(0)),backgroundColor:P.all.map(p=>p+'cc'),borderWidth:0,hoverOffset:8}]},options:opts});
+}
+
+/* ═══ STORE CHART ═══ */
+function renderST(){
+  const opts=bo();opts.plugins.legend.position='bottom';opts.scales.y.ticks.callback=v=>'SAR '+(v/1000).toFixed(0)+'K';
+  mk('stChart',{type:'bar',data:{labels:DB.stores.map(s=>s.StoreCode),datasets:[
+    {label:'Revenue',data:DB.stores.map(s=>+s.sales.toFixed(0)),backgroundColor:P.orange+'bb',borderRadius:4},
+    {label:'Net Profit',data:DB.stores.map(s=>+s.net_profit.toFixed(0)),backgroundColor:DB.stores.map(s=>s.net_profit<0?P.red+'88':P.teal+'88'),borderRadius:4}
+  ]},options:opts});
+}
+
+/* ═══ SCATTER ═══ */
+function renderScat(){
+  const items=DB.items;const c=gc();const opts=bo();opts.plugins.legend.display=false;
+  opts.scales.x.title={display:true,text:'Disc. Rate %',color:c.t2,font:{size:10}};
+  opts.scales.y.title={display:true,text:'Net Revenue (SAR)',color:c.t2,font:{size:10}};
+  opts.scales.y.ticks.callback=v=>'SAR '+(v/1000).toFixed(0)+'K';
+  opts.plugins.tooltip.callbacks={label:ctx=>{const it=items[ctx.dataIndex];return[it.item_desc.substring(0,30),`Disc: ${fP(it.disc_rate)}  Rev: ${fK(it.sales)}`,`Net Profit: ${fKd(it.net_profit)}`];}};
+  mk('scatChart',{type:'scatter',data:{datasets:[{
+    data:items.map(it=>({x:it.disc_rate,y:+it.sales.toFixed(0)})),
+    backgroundColor:items.map(it=>it.net_profit<0?P.red+'88':P.teal+'88'),
+    pointRadius:items.map(it=>Math.max(5,Math.min(18,it.qty/100))),pointHoverRadius:14
+  }]},options:opts});
+}
+
+/* ═══ SUPPLIER CHARTS ═══ */
+function renderSupCharts(){
+  const sups=DB.suppliers.slice(0,8);
+  const lbls=sups.map(s=>s['Supplier Name'].length>22?s['Supplier Name'].substring(0,22)+'…':s['Supplier Name']);
+  const o1=bo();o1.indexAxis='y';o1.plugins.legend.display=false;o1.scales.x.ticks.callback=v=>(v*100).toFixed(0)+'%';
+  mk('srChart',{type:'bar',data:{labels:lbls,datasets:[{label:'Comp. Rate',data:sups.map(s=>s.comp_rate||0),backgroundColor:sups.map(s=>(s.comp_rate||0)>0.4?P.teal+'cc':P.sky+'cc'),borderRadius:4}]},options:o1});
+  const o2=bo();o2.indexAxis='y';o2.plugins.legend.display=false;o2.scales.x.ticks.callback=v=>v.toFixed(0)+'%';
+  mk('smChart',{type:'bar',data:{labels:lbls,datasets:[{label:'Net Margin %',data:sups.map(s=>s.net_margin),backgroundColor:sups.map(s=>s.net_margin<0?P.red+'cc':s.net_margin>50?P.teal+'cc':P.orange+'cc'),borderRadius:4}]},options:o2});
+}
+
+/* ═══ FUNNEL ═══ */
+function renderFN(){
+  const T=getT(DB.monthly);
+  const steps=[
+    {n:'Impressions',v:2400000,c:P.sky},{n:'Clicks',v:384000,c:P.teal},
+    {n:'Product Views',v:172800,c:P.orange},{n:'Add to Cart',v:69120,c:P.amber},
+    {n:'Purchases',v:T.qty,c:P.green}
+  ];
+  const max=steps[0].v;
+  document.getElementById('fnWrap').innerHTML=steps.map((s,i)=>{
+    const w=(s.v/max*100).toFixed(1);
+    const fv=s.v>=1e6?(s.v/1e6).toFixed(2)+'M':s.v>=1000?(s.v/1000).toFixed(0)+'K':s.v;
+    const drp=i>0?`-(${(100-s.v/steps[i-1].v*100).toFixed(0)}%)`:'';
+    const conv=i>0?(s.v/steps[i-1].v*100).toFixed(1)+'% from prev stage':'';
+    return `<div class="fn-step">
+      <div class="fn-row"><span class="fn-name">${s.n}</span>
+        <div class="fn-nums"><span class="fn-val">${fv}</span>${i>0?`<span class="fn-drp">${drp}</span>`:''}</div>
+      </div>
+      <div class="fn-track"><div class="fn-fill" style="width:0%;background:${s.c}" data-w="${w}%"></div></div>
+      ${conv?`<div class="fn-pct">${conv}</div>`:''}
+    </div>`;
+  }).join('');
+  setTimeout(()=>document.querySelectorAll('.fn-fill').forEach(el=>el.style.width=el.dataset.w),300);
+}
+
+/* ═══ HEATMAP ═══ */
+function renderHM(){
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const hours=['8am','10am','12pm','2pm','4pm','6pm','8pm'];
+  const data=[[42,55,61,58,49,72,80],[38,50,66,70,60,85,92],[35,48,59,62,55,78,88],[40,52,64,68,57,82,90],[45,60,72,75,65,88,95],[50,65,78,80,70,92,98],[30,42,54,58,48,68,76]];
+  const col=v=>{const t=v/98;return `rgba(${Math.round(0*t)},${Math.round(168*t+180*(1-t))},${Math.round(150*t+216*(1-t))},${.25+t*.75})`;};
+  let h='<div></div>'+days.map(d=>`<div class="hm-h">${d}</div>`).join('');
+  hours.forEach((hr,hi)=>{h+=`<div class="hm-l">${hr}</div>`;days.forEach((_,di)=>{const v=data[hi][di];h+=`<div class="hm-c" style="background:${col(v)}"><span class="hm-tip">${days[di]} ${hours[hi]} · Score ${v}</span></div>`;});});
+  document.getElementById('hmGrid').innerHTML=h;
+}
+
+/* ═══ AB TEST ═══ */
+function renderAB(){
+  const tests=[
+    {tag:'Variant A',name:'Standard 30% Off',conv:4.2,roi:12,rev:'82K',net:'106K',win:false},
+    {tag:'Variant B',name:'Buy 1 Get 1 Free',conv:6.8,roi:28,rev:'134K',net:'172K',win:true},
+    {tag:'Variant C',name:'Bundle + Free Gift',conv:5.5,roi:19,rev:'108K',net:'138K',win:false}
+  ];
+  document.getElementById('abGrid').innerHTML=tests.map(t=>`
+    <div class="abc ${t.win?'win':''}">
+      <div class="ab-tag">${t.tag} ${t.win?'&#127942;':''}</div>
+      <div class="ab-name">${t.name}</div>
+      <div class="ab-ms">
+        <div><div class="ab-mv" style="color:${P.sky}">${t.conv}%</div><div class="ab-ml">Conv. Rate</div></div>
+        <div><div class="ab-mv" style="color:${P.orange}">SAR ${t.rev}</div><div class="ab-ml">Revenue</div></div>
+        <div><div class="ab-mv" style="color:${P.teal}">SAR ${t.net}</div><div class="ab-ml">Net Profit</div></div>
+        <div><div class="ab-mv" style="color:${P.green}">+${t.roi}%</div><div class="ab-ml">ROI Lift</div></div>
+      </div>
+      ${t.win?'<div class="ab-w">&#10003; Winner</div>':''}
+    </div>`).join('');
+}
+
+/* ═══ ATTRIBUTION + BEHAVIOUR ═══ */
+function renderAttr(){
+  const c=gc();
+  const chs=[{n:'In-Store Display',p:47,c:P.orange},{n:'Bundle Promos',p:24,c:P.teal},{n:'Clearance',p:17,c:P.sky},{n:'Digital',p:12,c:P.purple}];
+  document.getElementById('attrWrap').innerHTML=
+    `<div class="attr-b">${chs.map(ch=>`<div class="attr-s" style="width:0%;background:${ch.c}" data-w="${ch.p}%"></div>`).join('')}</div>
+    <div class="attr-l">${chs.map(ch=>`<div class="ali"><div class="ald" style="background:${ch.c}"></div>${ch.n}: <strong>${ch.p}%</strong></div>`).join('')}</div>`;
+  setTimeout(()=>document.querySelectorAll('.attr-s').forEach(el=>{el.style.width=el.dataset.w;el.style.transition='width 1.2s ease';}),400);
+
+  mk('rdChart',{type:'radar',data:{labels:['Reach','Engagement','Conversion','AOV Lift','Retention','ROI'],datasets:[
+    {label:'In-Store',data:[85,70,60,55,70,65],borderColor:P.orange,backgroundColor:P.orangeL,pointBackgroundColor:P.orange,pointBorderColor:'#fff',pointBorderWidth:2},
+    {label:'Bundle Promos',data:[65,80,75,80,60,78],borderColor:P.teal,backgroundColor:P.tealL,pointBackgroundColor:P.teal,pointBorderColor:'#fff',pointBorderWidth:2}
+  ]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:600},
+    scales:{r:{ticks:{display:false,backdropColor:'transparent'},grid:{color:c.g},angleLines:{color:c.g},pointLabels:{color:c.t2,font:{family:'Inter',size:10}}}},
+    plugins:{legend:{labels:{color:c.t,font:{family:'Inter',size:11}}}}}});
+
+  const M=getM();const opts=bo();opts.plugins.legend.position='bottom';
+  opts.scales.x.stacked=true;opts.scales.y.stacked=true;opts.scales.y.max=100;opts.scales.y.ticks.callback=v=>v+'%';
+  mk('bhChart',{type:'bar',data:{labels:M.map(r=>r.Month),datasets:[
+    {label:'Promo-Driven',data:M.map(()=>65+Math.round(Math.random()*6)),backgroundColor:P.orange+'bb',borderRadius:4},
+    {label:'Organic',data:M.map(()=>22+Math.round(Math.random()*4)),backgroundColor:P.teal+'99',borderRadius:4},
+    {label:'Repeat Buyers',data:M.map(()=>13+Math.round(Math.random()*3)),backgroundColor:P.sky+'88',borderRadius:4}
+  ]},options:opts});
+}
+
+/* ═══ TABLE ═══ */
+function populateDDs(){
+  const brands=[...new Set(DB.items.map(i=>i.Brand))].sort();
+  ['fBrand','tBrand'].forEach(id=>{const sel=document.getElementById(id);if(sel.options.length<=1)brands.forEach(b=>sel.add(new Option(b,b)));});
+}
+
+function filterT(q){
+  const br=document.getElementById('tBrand').value;
+  const st=document.getElementById('tStat').value;
+  q=(q||'').toLowerCase();
+  filtI=DB.items.filter(r=>{
+    return(!q||r.item_desc.toLowerCase().includes(q)||r.Brand.toLowerCase().includes(q))&&
+           (br==='all'||r.Brand===br)&&(st==='all'||r.status===st);
+  });
+  S.tp=1;renderTP();
+}
+
+function srtT(col){
+  if(S.ts===col)S.ta=!S.ta;else{S.ts=col;S.ta=false;}
+  document.querySelectorAll('#skuT thead th').forEach((th,i)=>{
+    th.classList.toggle('srt',i===col);
+    const si=th.querySelector('.si');
+    if(si)si.innerHTML=i===col?(S.ta?'&#8593;':'&#8595;'):'&#8645;';
+  });
+  const keys=['item_desc','Brand','qty','sales','disc','disc_rate','comp','raw_profit','net_profit','net_margin','status'];
+  filtI.sort((a,b)=>{const av=a[keys[col]],bv=b[keys[col]];if(typeof av==='string')return S.ta?(av>bv?1:-1):(av<bv?1:-1);return S.ta?av-bv:bv-av;});
+  renderTP();
+}
+
+const statusMap={'Profitable':'Profitable','Break Even':'Break Even','At Risk':'At Risk','Loss':'Loss'};
+const statusCls={'Profitable':'bg-g','Break Even':'bg-t','At Risk':'bg-o','Loss':'bg-r'};
+
+function renderTP(){
+  const st=(S.tp-1)*PG,pg=filtI.slice(st,st+PG);
+  document.getElementById('tCnt').textContent=filtI.length+' SKUs';
+  document.getElementById('tBody').innerHTML=pg.map(r=>`<tr>
+    <td style="max-width:185px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.75rem">${r.item_desc}</td>
+    <td><span class="bg bg-s">${r.Brand}</span></td>
+    <td class="tr" style="font-family:var(--m)">${fN(r.qty)}</td>
+    <td class="tr" style="font-family:var(--m)">SAR ${(r.sales/1000).toFixed(1)}K</td>
+    <td class="tr cr2" style="font-family:var(--m)">SAR ${(r.disc/1000).toFixed(1)}K</td>
+    <td class="tr ${r.disc_rate>50?'cr2':r.disc_rate<20?'cg':'co'}" style="font-family:var(--m)">${r.disc_rate.toFixed(1)}%</td>
+    <td class="tr ct2" style="font-family:var(--m)">SAR ${(r.comp/1000).toFixed(1)}K</td>
+    <td class="tr ${r.raw_profit<0?'cr2':'cg'}" style="font-family:var(--m)">${r.raw_profit<0?'-':''}SAR ${Math.abs(r.raw_profit/1000).toFixed(1)}K</td>
+    <td class="tr ${r.net_profit<0?'cr2':'ct2'}" style="font-family:var(--m);font-weight:700">${r.net_profit<0?'-':''}SAR ${Math.abs(r.net_profit/1000).toFixed(1)}K</td>
+    <td class="tr ${r.net_margin<0?'cr2':'ct2'}" style="font-family:var(--m)">${r.net_margin.toFixed(1)}%</td>
+    <td><span class="bg ${statusCls[r.status]||'bg-a'}">${statusMap[r.status]||r.status}</span></td>
+  </tr>`).join('');
+  renderPG();
+}
+
+function renderPG(){
+  const tot=Math.ceil(filtI.length/PG),p=S.tp;
+  let h=`<span class="pi">Page ${p} of ${tot}</span>`;
+  h+=`<button class="pgb" onclick="goP(${p-1})" ${p<=1?'disabled':''}>&#8249;</button>`;
+  for(let i=1;i<=tot;i++){
+    if(tot<=7||Math.abs(i-p)<=1||i===1||i===tot)h+=`<button class="pgb ${i===p?'on':''}" onclick="goP(${i})">${i}</button>`;
+    else if(Math.abs(i-p)===2)h+=`<span style="padding:0 2px;color:var(--t3)">…</span>`;
+  }
+  h+=`<button class="pgb" onclick="goP(${p+1})" ${p>=tot?'disabled':''}>&#8250;</button>`;
+  document.getElementById('tPag').innerHTML=h;
+}
+function goP(p){const t=Math.ceil(filtI.length/PG);if(p<1||p>t)return;S.tp=p;renderTP();}
+
+/* ═══ TARGETS ═══ */
+function renderTG(){
+  const M=getM();const T=getT(M);
+  const tgs=[
+    {n:'Revenue Target',v:T.sales,t:950000,c:P.orange},
+    {n:'Net Profit Target',v:T.net,t:290000,c:P.teal},
+    {n:'Units Sold',v:T.qty,t:15000,c:P.sky},
+    {n:'Supplier Compensation',v:T.comp,t:280000,c:P.green}
+  ];
+  document.getElementById('tgCard').innerHTML=`
+    <div class="ch"><div><div class="ct">🎯 Q1 Targets</div><div class="cs">Actual vs defined goals</div></div></div>
+    ${tgs.map(tg=>{
+      const p=Math.min(Math.round(Math.abs(tg.v)/tg.t*100),120);
+      const fA=Math.abs(tg.v)>=1000?'SAR '+(Math.abs(tg.v)/1000).toFixed(0)+'K':tg.v.toFixed(0);
+      const fT=tg.t>=1000?'SAR '+(tg.t/1000).toFixed(0)+'K':tg.t;
+      const hit=p>=100;
+      return `<div class="tgi">
+        <div class="tg-h"><span class="tg-n">${tg.n}</span><span class="tg-m">${tg.v<0?'-':''}${fA} / ${fT}</span></div>
+        <div class="tg-tr"><div class="tg-f" style="width:0%;background:${hit?P.green:tg.c}" data-w="${Math.min(p,100)}%"></div></div>
+        <div class="tg-ft">
+          <span style="font-weight:700;color:${hit?P.green:tg.c}">${p}%</span>
+          <span style="color:var(--t3)">${hit?'✅ Achieved':p>=80?'🟡 On Track':'🔴 Behind'}</span>
+        </div>
+      </div>`;
+    }).join('')}`;
+  setTimeout(()=>document.querySelectorAll('.tg-f').forEach(el=>el.style.width=el.dataset.w),500);
+}
+
+/* ═══ FORECAST CHART ═══ */
+function renderFC(){
+  const opts=bo();opts.plugins.legend.position='bottom';opts.spanGaps=true;opts.scales.y.ticks.callback=v=>'SAR '+(v/1000).toFixed(0)+'K';
+  mk('fcChart',{type:'line',data:{labels:['Jan','Feb','Mar','Apr ▶','May ▶','Jun ▶'],datasets:[
+    {label:'Actual Revenue',data:[277177,291563,312103,null,null,null],borderColor:P.orange,backgroundColor:P.orangeL,fill:true,tension:.35,pointRadius:5,pointBackgroundColor:P.orange,pointBorderColor:'#fff',pointBorderWidth:2},
+    {label:'Net Profit',data:[110081,59786,96723,null,null,null],borderColor:P.teal,backgroundColor:P.tealL,fill:true,tension:.35,pointRadius:5,pointBackgroundColor:P.teal,pointBorderColor:'#fff',pointBorderWidth:2},
+    {label:'Revenue Forecast',data:[null,null,312103,331000,349000,366000],borderColor:P.orange,borderDash:[5,4],fill:false,tension:.35,pointRadius:4,pointBackgroundColor:P.orange,pointBorderColor:'#fff',pointBorderWidth:2},
+    {label:'Profit Forecast',data:[null,null,96723,108000,116000,124000],borderColor:P.teal,borderDash:[5,4],fill:false,tension:.35,pointRadius:4,pointBackgroundColor:P.teal,pointBorderColor:'#fff',pointBorderWidth:2}
+  ]},options:opts});
+}
+
+/* ═══ RECOMMENDATIONS ═══ */
+function renderRecs(){
+  const recs=[
+    {ic:'&#129309;',t:'Maximize Bioderma Compensation',d:'Bioderma compensates 43.6% of discount (SAR 234K). Negotiate to 48% — estimated SAR 26K additional quarterly recovery.'},
+    {ic:'&#9888;',t:'Review Cetaphil Urgently',d:'Even after compensation, Cetaphil margin remains -19%. A 63.5% discount rate is unsustainable — reduce or exit.'},
+    {ic:'&#127942;',t:'Derma Pella — Exceptional Growth Opportunity',d:'122% compensation rate delivers exceptional 151% net margin. Increase promotional budget for this supplier immediately.'},
+    {ic:'&#128197;',t:'Manage February Budget Risk',d:'February: SAR 302K discount vs only SAR 101K compensation (33.5%). Set monthly discount caps with real-time alerts.'},
+    {ic:'&#128200;',t:'La Roche — Zero Compensation',d:'La Roche holds 34% raw margin with no supplier compensation. Negotiate a compensation program with the supplier.'},
+    {ic:'&#127919;',t:'Optimize High-Discount SKUs',d:'Bioderma Photoderm Cr.Spf50+ at 59.2% discount still records -SAR 6K net loss. Reduce discount to 45% to recover approx. SAR 8K.'}
+  ];
+  document.getElementById('recGrid').innerHTML=recs.map(r=>`
+    <div class="rc"><div class="rc-ic">${r.ic}</div>
+    <div class="rc-t">${r.t}</div><div class="rc-d">${r.d}</div>
+    <div class="rc-a">Take Action ›</div></div>`).join('');
+}
+
+/* ═══ ALERTS + FEED ═══ */
+function renderAlerts(){
+  const als=[
+    {ic:'&#128308;',t:'Bioderma Photoderm Cr.Spf50+ — Net Loss',d:'Despite SAR 78.5K compensation, net loss remains -SAR 6K. Discount rate of 59.2% must be reduced.',tm:'Critical · Q1',c:P.red},
+    {ic:'&#128992;',t:'Cetaphil — Negative Net Margin',d:'-19% margin persists despite SAR 5.8K compensation. 63.5% discount rate is unsustainable.',tm:'High · Q1',c:P.orange},
+    {ic:'&#128993;',t:'February Compensation Gap',d:'SAR 302K discount vs SAR 101K compensation — only 33.5% coverage vs Q1 average 38.6%. Review February terms.',tm:'Medium · Feb 2026',c:P.amber},
+    {ic:'&#128994;',t:'Overall Q1 Net Profit Positive',d:'SAR 266K net profit (30.3% margin) confirms the compensation model works. March best month at 31% margin.',tm:'Info · Q1 2026',c:P.green}
+  ];
+  document.getElementById('alerts').innerHTML=als.map(a=>`
+    <div class="al" style="--ac:${a.c}"><div class="al-ic">${a.ic}</div>
+    <div><div class="al-t">${a.t}</div><div class="al-d">${a.d}</div><div class="al-tm">${a.tm}</div></div></div>`).join('');
+  document.getElementById('feed').innerHTML=[
+    {t:'Q1 net profit SAR 266K confirmed after all supplier compensation processed.',tm:'Apr 1, 2026'},
+    {t:'NAGHI BROTHERS (Bioderma) compensation SAR 234K received for Q1.',tm:'Mar 25, 2026'},
+    {t:'March: SAR 312K revenue · SAR 109K net profit · 4,852 units — best month.',tm:'Mar 31, 2026'},
+    {t:'Derma Pella: 122% compensation rate confirmed — highest in portfolio.',tm:'Mar 30, 2026'},
+    {t:'February discount budget exceeded by SAR 52K — under review.',tm:'Mar 5, 2026'},
+    {t:'Eucerin compensation terms renewed — rate confirmed at 33.4%.',tm:'Feb 15, 2026'},
+    {t:'Q1 dashboard launched — 486 stores · 53 brands · 199 SKUs.',tm:'Jan 1, 2026'}
+  ].map(f=>`<div class="fi"><div class="fd"></div><div><div class="ft">${f.t}</div><div class="ftm">${f.tm}</div></div></div>`).join('');
+}
+
+/* ═══ FILTERS ═══ */
+function applyF(showT=false){
+  FL.month=document.getElementById('fMonth').value;
+  FL.brand=document.getElementById('fBrand').value;
+  renderKPIs();renderRV();renderBR();renderAttr();renderTG();renderFC();
+  filterT(document.getElementById('tq').value);
+  const tags=[];
+  if(FL.month!=='all')tags.push([FL.month,'fMonth']);
+  if(FL.brand!=='all')tags.push([FL.brand,'fBrand']);
+  document.getElementById('fTags').innerHTML=tags.map(([t,id])=>
+    `<div class="ftag">${t}<span class="ftag-x" onclick="clearF('${id}')">&#10005;</span></div>`).join('');
+  if(showT)toast(`Filters: ${FL.month==='all'?'All Months':FL.month} · ${FL.brand==='all'?'All Brands':FL.brand}`);
+}
+function clearF(id){document.getElementById(id).selectedIndex=0;applyF();}
+function resetF(){['fMonth','fBrand','fMode'].forEach(id=>{const el=document.getElementById(id);if(el)el.selectedIndex=0;});document.getElementById('fTags').innerHTML='';applyF();toast('Filters reset');}
+
+/* ═══ DARK MODE ═══ */
+function toggleTheme(){
+  S.dark=!S.dark;
+  document.documentElement.setAttribute('data-theme',S.dark?'dark':'light');
+  document.getElementById('sw').classList.toggle('on',S.dark);
+  [renderMC,renderSC,renderRV,renderBR,renderBC,renderDonut,renderST,renderScat,renderSupCharts,renderAttr,renderFC].forEach(fn=>fn());
+  setTimeout(renderKPIs,50);
+}
+
+/* ═══ NAV ═══ */
+function nav(id,el){document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));el.classList.add('on');const t=document.getElementById(id);if(t)t.scrollIntoView({behavior:'smooth',block:'start'});}
+
+/* ═══ EXPORT ═══ */
+function exportCSV(){
+  const hdr=['Item','Brand','Units','Revenue','Discount','Disc%','Compensation','Raw Profit','Net Profit','Margin%','Status'];
+  const rows=DB.items.map(r=>[`"${r.item_desc}"`,r.Brand,r.qty,r.sales.toFixed(2),r.disc.toFixed(2),r.disc_rate.toFixed(1),r.comp.toFixed(2),r.raw_profit.toFixed(2),r.net_profit.toFixed(2),r.net_margin.toFixed(1),r.status]);
+  const csv=[hdr,...rows].map(r=>r.join(',')).join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent('\ufeff'+csv);a.download='united_pharmacy_suncare_q1_2026.csv';a.click();
+  toast('CSV exported successfully');
+}
+function scrollFc(){document.getElementById('fcBadge').scrollIntoView({behavior:'smooth'});toast('Q2 Forecast: SAR 116K+ net profit by June');}
+
+/* ═══ TOAST ═══ */
+let tt;
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('show'),3200);}
+
+/* ═══ INIT ═══ */
+function init(){
+  populateDDs();
+  renderKPIs();
+  renderMC();renderSC();renderMCBars();
+  renderRV();renderBR();
+  renderBC();renderST();renderScat();
+  renderSupCharts();
+  renderFN();renderHM();renderAB();renderAttr();
+  renderTP();renderTG();renderFC();
+  renderRecs();renderAlerts();
+  setTimeout(()=>{const ld=document.getElementById('ldr');ld.classList.add('out');setTimeout(()=>ld.style.display='none',420);},1700);
+  if(window.innerWidth<=900)document.getElementById('mob').style.display='flex';
+  window.addEventListener('resize',()=>document.getElementById('mob').style.display=window.innerWidth<=900?'flex':'none');
+}
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>
